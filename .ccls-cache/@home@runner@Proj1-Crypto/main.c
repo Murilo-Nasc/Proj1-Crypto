@@ -7,8 +7,8 @@
 
 // Estrutura para armazenar CPF e Senha do usuário
 typedef struct {
-    char cpf[12];
-    char senha[7];
+  char cpf[12];
+  char senha[7];
 } Usuario;
 
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
@@ -27,10 +27,9 @@ int main(void) {
   char lixo;
 
   // Código Principal
-  printf("%d", num_usuarios);
   printf("Bem vindo ao banco!\n");
   while (1) {
-    printf("Escolha uma opção:\n1 - Login\n2 - Cadastro\n");
+    printf("Escolha uma opção:\n1 - Login\n2 - Cadastro\n3 - Sair\n");
 
     scanf("%d", &opcao);
     scanf("%c", &lixo);
@@ -41,6 +40,8 @@ int main(void) {
       break;
     case 2: // Função Cadastro
       cadastro(lista_usuarios, &num_usuarios);
+      continue;
+    case 3: // Sair
       break;
     default: // Opção Inválida
       printf("\nOpção inválida\n\n");
@@ -58,31 +59,30 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
 
   if (*num_usuarios >= MAX_USUARIOS) {
     printf("Limite de usuários atingido.\n");
-  }
-  else {
+  } else {
     while (1) {
       printf("\nDigite seu CPF (11 caracteres):\n");
       fgets(cpf, sizeof(cpf), stdin);
-      
+
       cpf[strcspn(cpf, "\n")] = '\0';
-  
-      // Verifica se é um CPF válido 
+
+      // Verifica se é um CPF válido
       if (strlen(cpf) != 11) {
         printf("\nCPF inválido\n");
         continue;
       }
-    
+
       printf("\nDigite sua senha (6 caracteres):\n");
       fgets(senha, sizeof(senha), stdin);
-      
+
       senha[strcspn(senha, "\n")] = '\0';
-  
+
       // Verifica se é uma senha válida
       if (strlen(senha) != 6) {
         printf("\nSenha inválida\n");
         continue;
       }
-  
+
       // Verifica se já existe um CPF com esse cadastro
       int cpf_existe = 0; // Flag para verificar se o CPF já existe
       for (int i = 0; i < *num_usuarios; i++) {
@@ -94,17 +94,17 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       }
 
       if (cpf_existe) {
-          continue;
+        continue;
       }
-  
+
       // Armazenar o usuário no array
       strcpy(lista_usuarios[*num_usuarios].cpf, cpf);
       strcpy(lista_usuarios[*num_usuarios].senha, senha);
       (*num_usuarios)++;
-  
+
       // Salvar os usuários no arquivo
       salvar_usuarios(lista_usuarios, *num_usuarios);
-      
+
       printf("\nCadastro realizado com sucesso!\n");
       break;
     }
@@ -134,7 +134,9 @@ int carregar_usuarios(Usuario lista_usuarios[]) {
 
   int num_usuarios = 0; // Contador local
 
-  while (num_usuarios < MAX_USUARIOS && fscanf(file, "%s %s", lista_usuarios[num_usuarios].cpf, lista_usuarios[num_usuarios].senha) == 2) {
+  while (num_usuarios < MAX_USUARIOS &&
+         fscanf(file, "%s %s", lista_usuarios[num_usuarios].cpf,
+                lista_usuarios[num_usuarios].senha) == 2) {
     num_usuarios++;
   }
 
