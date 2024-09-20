@@ -14,6 +14,7 @@ typedef struct {
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
 int carregar_usuarios(Usuario lista_usuarios[]);
 void cadastro(Usuario lista_usuarios[], int *num_usuarios);
+int login(Usuario lista_usuarios[], int num_usuarios);
 
 int main(void) {
   // Localização para Portugues + Seed para Random
@@ -23,21 +24,29 @@ int main(void) {
   // Declaração das variáveis
   Usuario lista_usuarios[MAX_USUARIOS];
   int num_usuarios = carregar_usuarios(lista_usuarios);
-  int opcao;
+  int opcao, login_efetuado;
   char lixo;
 
   // Código Principal
   printf("Bem vindo ao banco!\n");
   while (1) {
-    printf("Escolha uma opção:\n1 - Login\n2 - Cadastro\n3 - Sair\n");
+    printf("Escolha uma opção:\n1 - Login\n2 - Cadastro\n3 - Sair\n\n");
 
     scanf("%d", &opcao);
     scanf("%c", &lixo);
 
     switch (opcao) {
     case 1: // Função Login
-      printf("Login");
-      break;
+      login_efetuado = login(lista_usuarios, num_usuarios);
+      if (login_efetuado) {
+        printf("Login efetuado com sucesso!\n");
+
+        // OPCÕES DE FUNÇÕES
+        
+      } else {
+        printf("Login não efetuado (Senha ou CPF incorretos)\n");
+        continue;
+      }
     case 2: // Função Cadastro
       cadastro(lista_usuarios, &num_usuarios);
       continue;
@@ -55,7 +64,6 @@ int main(void) {
 
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   char cpf[50], senha[50];
-  char lixo;
 
   if (*num_usuarios >= MAX_USUARIOS) {
     printf("Limite de usuários atingido.\n");
@@ -142,4 +150,47 @@ int carregar_usuarios(Usuario lista_usuarios[]) {
 
   fclose(file);
   return num_usuarios; // Retorna o número de usuários carregados
+}
+
+int login(Usuario lista_usuarios[], int num_usuarios) {
+  char cpf[50], senha[50];
+
+  while (1) {
+    printf("\nDigite seu CPF (11 caracteres):\n");
+    fgets(cpf, sizeof(cpf), stdin);
+
+    cpf[strcspn(cpf, "\n")] = '\0';
+
+    // Verifica se é um CPF válido
+    if (strlen(cpf) != 11) {
+      printf("\nCPF inválido\n");
+      continue;
+    }
+
+    printf("\nDigite sua senha (6 caracteres):\n");
+    fgets(senha, sizeof(senha), stdin);
+
+    senha[strcspn(senha, "\n")] = '\0';
+
+    // Verifica se é uma senha válida
+    if (strlen(senha) != 6) {
+      printf("\nSenha inválida\n");
+      continue;
+      }
+
+    // Verifica se o CPF e a senha correspondem a um usuário válido
+    int usuario_encontrado = 0; // Flag para verificar se o usuário foi encontrado
+    for (int i = 0; i < num_usuarios; i++) {
+      if (strcmp(lista_usuarios[i].cpf, cpf) == 0 && strcmp(lista_usuarios[i].senha, senha) == 0) {
+        usuario_encontrado = 1; // Define a flag como verdadeiro
+        break;
+      }
+    }
+    
+    if (usuario_encontrado) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 }
