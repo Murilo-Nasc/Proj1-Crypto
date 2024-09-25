@@ -143,3 +143,30 @@ void mostrar_saldo(Usuario lista_usuarios[], int index_usuario){
   printf("Ethereum: %.8lf ETH\n", lista_usuarios[index_usuario].ethereum);
   printf("Ripple: %.8lf XRP\n", lista_usuarios[index_usuario].ripple);
 }
+
+
+// Função Depósito
+void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
+  double valor;
+  printf("\nDigite o valor que deseja depositar em reais:\n");
+  scanf("%lf", &valor);
+  lista_usuarios[index_usuario].reais += valor;
+  printf("\nDepósito realizado com sucesso!\n");
+  salvar_usuarios(lista_usuarios, num_usuarios);
+}
+
+
+// Função Saque
+void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
+  double valor;
+  printf("\nDigite o valor que deseja sacar em reais:\n");
+  scanf("%lf", &valor);
+  if (valor > lista_usuarios[index_usuario].reais){
+    printf("\nSaldo insuficiente\n");
+  }
+  else{
+    lista_usuarios[index_usuario].reais -= valor;
+    printf("\nSaque realizado com sucesso!\n");
+    salvar_usuarios(lista_usuarios, num_usuarios);
+  }
+}

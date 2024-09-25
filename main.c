@@ -53,8 +53,10 @@ int main(void) {
             case 2: // Função Consultar Extrato
               continue;
             case 3: // Função Depositar
+              depositar(lista_usuarios, index_usuario, num_usuarios);
               continue;
             case 4: // Função Sacar
+              sacar(lista_usuarios, index_usuario, num_usuarios);
               continue;
             case 5: // Função Comprar Criptomoedas
               continue;

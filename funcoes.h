@@ -24,5 +24,7 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario);
 
 void mostrar_saldo(Usuario lista_usuarios[], int index_usuario);
 
+void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios);
+void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios);
 
 #endif 
