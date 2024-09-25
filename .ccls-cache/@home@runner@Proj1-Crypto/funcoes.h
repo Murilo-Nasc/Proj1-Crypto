@@ -8,8 +8,8 @@
 
 // Estrutura para armazenar CPF e Senha do usuário
 typedef struct {
-  char cpf[12];
-  char senha[7];
+  long long int cpf;
+  int senha;
 } Usuario;
 
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
