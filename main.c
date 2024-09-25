@@ -32,12 +32,48 @@ int main(void) {
         printf("Login efetuado com sucesso!\n");
 
         // OPCÕES DE FUNÇÕES
-        break;
+        while (1) { 
+          printf("\nEscolha uma opção \n\n");
+          printf("1. Consultar saldo\n");
+          printf("2. Consultar extrato\n");
+          printf("3. Depositar\n");
+          printf("4. Sacar\n");
+          printf("5. Comprar criptomoedas\n");
+          printf("6. Vender criptomoedas\n");
+          printf("7. Atualizar cotação\n");
+          printf("8. Sair\n");
+
+          scanf("%d", &opcao);
+          scanf("%c", &lixo);
+          
+          switch (opcao){
+            case 1: // Função Consultar Saldo
+              mostrar_saldo(lista_usuarios, index_usuario);
+              continue;
+            case 2: // Função Consultar Extrato
+              continue;
+            case 3: // Função Depositar
+              continue;
+            case 4: // Função Sacar
+              continue;
+            case 5: // Função Comprar Criptomoedas
+              continue;
+            case 6: // Função Vender Criptomoedas
+              continue;
+            case 7: // Função Atualizar Cotação
+              continue;
+            case 8: // Função Sair
+              printf("Adeus! Volte sempre!");
+              break;
+          }
+          break;
+        }
         
       } else {
         printf("Login não efetuado (Senha ou CPF incorretos)\n");
         continue;
       }
+      break;
     case 2: // Função Cadastro
       cadastro(lista_usuarios, &num_usuarios);
       continue;
