@@ -10,11 +10,17 @@
 typedef struct {
   long long int cpf;
   int senha;
+  double reais;
+  double bitcoin;
+  double ethereum;
+  double ripple;
 } Usuario;
+
 
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
 int carregar_usuarios(Usuario lista_usuarios[]);
 void cadastro(Usuario lista_usuarios[], int *num_usuarios);
-int login(Usuario lista_usuarios[], int num_usuarios);
+int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario);
+
 
 #endif 

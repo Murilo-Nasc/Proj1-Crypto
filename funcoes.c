@@ -45,7 +45,12 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       // Armazenar o usuário no array
       lista_usuarios[*num_usuarios].cpf = cpf;
       lista_usuarios[*num_usuarios].senha = senha;
+      lista_usuarios[*num_usuarios].reais = 0.0;
+      lista_usuarios[*num_usuarios].bitcoin = 0.0;
+      lista_usuarios[*num_usuarios].ethereum = 0.0;
+      lista_usuarios[*num_usuarios].ripple = 0.0;
       (*num_usuarios)++;
+      
 
       // Salvar os usuários no arquivo
       salvar_usuarios(lista_usuarios, *num_usuarios);
@@ -85,7 +90,7 @@ int carregar_usuarios(Usuario lista_usuarios[]) {
 
 
 // Função Login
-int login(Usuario lista_usuarios[], int num_usuarios) {
+int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
   long long cpf;
   int senha;
 
@@ -113,6 +118,7 @@ int login(Usuario lista_usuarios[], int num_usuarios) {
     for (int i = 0; i < num_usuarios; i++) {
       if (lista_usuarios[i].cpf == cpf && lista_usuarios[i].senha == senha) {
         usuario_encontrado = 1;
+        *index_usuario = i;
         break;
       }
     }

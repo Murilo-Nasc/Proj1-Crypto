@@ -14,7 +14,7 @@ int main(void) {
   // Declaração das variáveis
   Usuario lista_usuarios[MAX_USUARIOS];
   int num_usuarios = carregar_usuarios(lista_usuarios);
-  int opcao, login_efetuado;
+  int opcao, login_efetuado, index_usuario;
   char lixo;
 
   // Código Principal
@@ -27,7 +27,7 @@ int main(void) {
 
     switch (opcao) {
     case 1: // Função Login
-      login_efetuado = login(lista_usuarios, num_usuarios);
+      login_efetuado = login(lista_usuarios, num_usuarios, &index_usuario);
       if (login_efetuado) {
         printf("Login efetuado com sucesso!\n");
 
@@ -49,6 +49,7 @@ int main(void) {
     }
     break;
   }
+
 
   return 0;
 }
