@@ -48,7 +48,7 @@ int main(void) {
           
           switch (opcao){
             case 1: // Função Consultar Saldo
-              printf("Seu saldo é de: %lf \n", lista_usuarios[index_usuario].reais);
+              mostrar_saldo(lista_usuarios, index_usuario);
               continue;
             case 2: // Função Consultar Extrato
               continue;

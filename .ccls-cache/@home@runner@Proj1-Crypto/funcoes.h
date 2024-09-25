@@ -22,5 +22,7 @@ int carregar_usuarios(Usuario lista_usuarios[]);
 void cadastro(Usuario lista_usuarios[], int *num_usuarios);
 int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario);
 
+void mostrar_saldo(Usuario lista_usuarios[], int index_usuario);
+
 
 #endif 

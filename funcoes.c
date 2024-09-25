@@ -130,3 +130,16 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
     }
   }
 }
+
+
+// Função Mostrar Saldo
+void mostrar_saldo(Usuario lista_usuarios[], int index_usuario){
+  printf("\nSeus dados:\n");
+  printf("CPF: %lld\n", lista_usuarios[index_usuario].cpf);
+  printf("Senha: %d\n", lista_usuarios[index_usuario].senha);
+  printf("\nSeu saldo:\n");
+  printf("Reais: R$ %.2lf\n", lista_usuarios[index_usuario].reais);
+  printf("Bitcoin: %.8lf BTC\n", lista_usuarios[index_usuario].bitcoin);
+  printf("Ethereum: %.8lf ETH\n", lista_usuarios[index_usuario].ethereum);
+  printf("Ripple: %.8lf XRP\n", lista_usuarios[index_usuario].ripple);
+}
