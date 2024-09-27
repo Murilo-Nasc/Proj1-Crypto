@@ -64,6 +64,7 @@ int main(void) {
               comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
               continue;
             case 6: // Função Vender Criptomoedas
+              vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
               continue;
             case 7: // Função Atualizar Cotação
               continue;

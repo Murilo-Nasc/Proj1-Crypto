@@ -263,3 +263,76 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
 
 
 // Função Vender Criptomoedas
+void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao) {
+    int opcao, senha, opcao_confirmacao;;
+    double valor_cripto, valor_cripto_taxado, valor_reais;
+    const char *nomes[] = {"Bitcoin", "Ethereum", "Ripple"};
+    double *cotas[] = {&cotacao.bitcoin, &cotacao.ethereum, &cotacao.ripple};
+
+    printf("\nEscolha a criptomoeda que deseja vender:\n");
+    for (int i = 0; i < 3; i++) {
+        printf("%d. %s\n", i + 1, nomes[i]);
+    }
+    scanf("%d", &opcao);
+    opcao--; // Ajuste para índice de array
+
+    if (opcao < 0 || opcao >= 3) {
+        printf("Opção inválida\n");
+        return;
+    }
+
+    printf("Insira o valor que você deseja vender em %s (Sem incluir taxas):\n", nomes[opcao]);
+    scanf("%lf", &valor_cripto);
+    if (opcao == 0) {
+      valor_cripto_taxado = valor_cripto * 1.03;
+      if (valor_cripto_taxado > lista_usuarios[index_usuario].bitcoin) {
+          printf("\nSaldo insuficiente\n");
+          return;
+      }
+    }
+    else if (opcao == 1) {
+      valor_cripto_taxado = valor_cripto * 1.02;
+      if (valor_cripto_taxado > lista_usuarios[index_usuario].ethereum) {
+          printf("\nSaldo insuficiente\n");
+          return;
+      }
+    }
+    else if (opcao == 2) {
+      valor_cripto_taxado = valor_cripto * 1.01;
+      if (valor_cripto_taxado > lista_usuarios[index_usuario].ripple) {
+          printf("\nSaldo insuficiente\n");
+          return;
+      }
+    }
+
+    printf("Insira sua senha para confirmação:\n");
+    scanf("%d", &senha);
+    if (lista_usuarios[index_usuario].senha != senha) {
+        printf("\nSenha incorreta\n");
+        return;
+    }
+
+    valor_reais = valor_cripto * (*cotas[opcao]);
+    printf("\nResumo da venda:\n");
+    printf("Valor em %s com taxas: R$ %.8lf\n", nomes[opcao], valor_cripto_taxado);
+    printf("Valor em Reais: %.2lf\n", valor_reais);
+    printf("\n1. Confirmar Venda\n2. Cancelar Venda\n");
+    scanf("%d", &opcao_confirmacao);
+
+    if (opcao_confirmacao == 1) {
+        if (opcao == 0) {  // Se a opção for Bitcoin
+            lista_usuarios[index_usuario].bitcoin -= valor_cripto_taxado;
+        } else if (opcao == 1) {  // Se a opção for Ethereum
+            lista_usuarios[index_usuario].ethereum -= valor_cripto_taxado;
+        } else if (opcao == 2) {  // Se a opção for Ripple
+            lista_usuarios[index_usuario].ripple -= valor_cripto_taxado;
+        }
+        lista_usuarios[index_usuario].reais += valor_reais;
+        printf("\nVenda realizada com sucesso!\n");
+        salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
+    } else if (opcao == 2) {
+        printf("\nVenda cancelada\n");
+    } else {
+        printf("Opção inválida\n");
+    }
+}
