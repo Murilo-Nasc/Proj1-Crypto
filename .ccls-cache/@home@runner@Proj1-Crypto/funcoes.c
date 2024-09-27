@@ -12,22 +12,20 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       printf("\nDigite seu CPF (11 caracteres):\n");
       scanf("%lld", &cpf);
 
-      // Verifica se o CPF tem 11 dígitos
-      if (cpf < 10000000000LL || cpf > 99999999999LL) {
+      if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
         printf("\nCPF inválido\n");
         continue;
       }
 
       printf("\nDigite sua senha (6 dígitos):\n");
       scanf("%d", &senha);
-
-      // Verifica se a senha tem 6 dígitos
-      if (senha < 100000 || senha > 999999) {
+      
+      if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
         printf("\nSenha inválida\n");
         continue;
       }
 
-      // Verifica se já existe um CPF com esse cadastro
+      // Verifica se o CPF já está cadastrado
       int cpf_existe = 0;
       for (int i = 0; i < *num_usuarios; i++) {
         if (lista_usuarios[i].cpf == cpf) {
@@ -82,7 +80,7 @@ int carregar_usuarios(Usuario lista_usuarios[]) {
     return 0; // Retorna 0 se não houver usuários
   }
 
-  int num_usuarios = fread(lista_usuarios, sizeof(Usuario), MAX_USUARIOS, file); // Lê os usuários
+  int num_usuarios = fread(lista_usuarios, sizeof(Usuario), MAX_USUARIOS, file);  // Lê os usuários
   fclose(file);
   return num_usuarios; 
 }
@@ -97,8 +95,7 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
     printf("\nDigite seu CPF (11 dígitos):\n");
     scanf("%lld", &cpf);
 
-     // Verifica se é um CPF válido
-    if (cpf < 10000000000LL || cpf > 99999999999LL) {
+    if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
       printf("\nCPF inválido\n");
       continue;
     }
@@ -106,8 +103,7 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
     printf("\nDigite sua senha (6 dígitos):\n");
     scanf("%d", &senha);
 
-    // Verifica se a senha tem 6 dígitos
-    if (senha < 100000 || senha > 999999) {
+    if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
       printf("\nSenha inválida\n");
       continue;
     }
@@ -158,15 +154,23 @@ void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
 // Função Saque
 void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
   double valor;
+  int senha;
   printf("\nDigite o valor que deseja sacar em reais:\n");
   scanf("%lf", &valor);
   if (valor > lista_usuarios[index_usuario].reais){
     printf("\nSaldo insuficiente\n");
   }
   else{
-    lista_usuarios[index_usuario].reais -= valor;
+    printf("Insira sua senha:\n");
+    scanf("%d", &senha);
+    if (senha == lista_usuarios[index_usuario].senha){
+      lista_usuarios[index_usuario].reais -= valor;
     printf("\nSaque realizado com sucesso!\n");
     salvar_usuarios(lista_usuarios, num_usuarios);
+    }
+    else {
+      printf("\nSenha incorreta\n");
+    }
   }
 }
 
@@ -240,19 +244,22 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
     scanf("%d", &opcao_confirmacao);
 
     if (opcao_confirmacao == 1) {
-        if (strcmp(nomes[opcao], "Bitcoin") == 0) {
+        if (opcao == 0) {  // Se a opção for Bitcoin
             lista_usuarios[index_usuario].bitcoin += valor_cripto;
-        } else if (strcmp(nomes[opcao], "Ethereum") == 0) {
+        } else if (opcao == 1) {  // Se a opção for Ethereum
             lista_usuarios[index_usuario].ethereum += valor_cripto;
-        } else if (strcmp(nomes[opcao], "Ripple") == 0) {
+        } else if (opcao == 2) {  // Se a opção for Ripple
             lista_usuarios[index_usuario].ripple += valor_cripto;
         }
         lista_usuarios[index_usuario].reais -= valor_taxado;
         printf("\nCompra realizada com sucesso!\n");
-        salvar_usuarios(lista_usuarios, num_usuarios);
+        salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
     } else if (opcao == 2) {
         printf("\nCompra cancelada\n");
     } else {
         printf("Opção inválida\n");
     }
 }
+
+
+// Função Vender Criptomoedas
