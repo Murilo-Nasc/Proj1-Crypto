@@ -67,6 +67,7 @@ int main(void) {
               vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
               continue;
             case 7: // Função Atualizar Cotação
+              atualizar_cotacao(&cotacao);
               continue;
             case 8: // Função Sair
               printf("Adeus! Volte sempre!");

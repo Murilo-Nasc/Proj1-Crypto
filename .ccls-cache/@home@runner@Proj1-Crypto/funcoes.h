@@ -37,4 +37,6 @@ void salvar_cotacao(Cotacao cotacao);
 void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao);
 void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao);
 
+void atualizar_cotacao(Cotacao *cotacao);
+
 #endif 

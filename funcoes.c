@@ -336,3 +336,22 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
         printf("Opção inválida\n");
     }
 }
+
+
+// Função Atualizar Cotação
+void atualizar_cotacao(Cotacao *cotacao) {
+  double valor_bitcoin, valor_ethereum, valor_ripple;
+  valor_bitcoin = cotacao->bitcoin;
+  valor_ethereum = cotacao->ethereum;
+  valor_ripple = cotacao->ripple;
+
+  cotacao->bitcoin *= (1 + ((double)rand() / RAND_MAX) * 0.1 - 0.05); 
+  cotacao->ethereum *= (1 + ((double)rand() / RAND_MAX) * 0.1 - 0.05);
+  cotacao->ripple *= (1 + ((double)rand() / RAND_MAX) * 0.1 - 0.05);
+
+  printf("\nCotação Atualizada!\n");
+  printf("Bitcoin: %.8lf BTC -> %.8lf BTC\n", valor_bitcoin, cotacao->bitcoin);
+  printf("Ethereum: %.8lf ETH -> %.8lf ETH\n", valor_ethereum, cotacao->ethereum);
+  printf("Ripple: %.8lf XRP -> %.8lf XRP\n", valor_ripple, cotacao->ripple);
+}
+
