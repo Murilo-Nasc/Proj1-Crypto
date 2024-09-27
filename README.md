@@ -28,5 +28,5 @@ Para compilar e executar este código, você precisará de:
 
 ## Membros
 
-Leonardo Bezzi Elias; RA: 24.124.045-6
-Murilo Gonçalves Nascimento; RA: 24.124.042-3
+- Leonardo Bezzi Elias; RA: 24.124.045-6
+- Murilo Gonçalves Nascimento; RA: 24.124.042-3
