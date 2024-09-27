@@ -24,7 +24,7 @@ A partir da execução, voce é apresentado com 3 opções: Login, Cadastro e Sa
 
 ## Pré-requisitos
 
-O programa é compilado no replit a partir do arquivo ./main
+O programa é compilado no Replit a partir do arquivo ./main
 
 ## Membros
 
