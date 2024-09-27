@@ -23,8 +23,8 @@ Esse projeto tem como objetivo implementar as funcionalidades de um sistema banc
 A partir da execução, voce é apresentado com 3 opções: Login, Cadastro e Sair. Um usuário novo necessita criar um cadastro antes de dar login. Para isso, o usuário deve inserir seu CPF (apenas números) e uma senha de 6 dígitos. Caso esse CPF não esteja cadastrado ainda, é criada uma nova conta. Com o cadastro criado, o usuário deve seguir para a área de login aonde os mesmos dados são inseridos, caso válidados, o indivíduo é direcionado ao menu. Nele, o usuário pode escolher entre consultar o saldo, consultar o extrato, depositar, sacar, comprar cripto, vender cripto, atualizar cotação e sair (que finaliza o programa).
 
 ## Pré-requisitos
-Para compilar e executar este código, você precisará de:
-- Um compilador C
+
+O programa é compilado no replit a partir do arquivo ./main
 
 ## Membros
 
