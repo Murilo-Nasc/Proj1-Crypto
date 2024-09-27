@@ -5,6 +5,7 @@
 #include <time.h>
 #include "funcoes.h" 
 #define MAX_USUARIOS 10
+#define MAX_TRANSACOES 100
 
 int main(void) {
   // Localização para Portugues + Seed para Random
@@ -53,6 +54,8 @@ int main(void) {
               mostrar_saldo(lista_usuarios, index_usuario);
               continue;
             case 2: // Função Consultar Extrato
+              printf("\n");
+              carregar_extrato(lista_usuarios);
               continue;
             case 3: // Função Depositar
               depositar(lista_usuarios, index_usuario, num_usuarios);
@@ -67,6 +70,7 @@ int main(void) {
               vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
               continue;
             case 7: // Função Atualizar Cotação
+              atualizar_cotacao(&cotacao);
               continue;
             case 8: // Função Sair
               printf("Adeus! Volte sempre!");
