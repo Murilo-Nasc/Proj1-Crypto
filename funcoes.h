@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_USUARIOS 10
+#define MAX_TRANSACOES 100
 
 // Estrutura para armazenar CPF e Senha do usuário
 typedef struct {
@@ -21,6 +22,15 @@ typedef struct {
   double ethereum;
   double ripple;
 } Cotacao;
+
+typedef struct {
+    char tempo[20];
+    double deposito;
+    double saldo_reais;
+    double saldo_bitcoin;
+    double saldo_ethereum;
+    double saldo_ripple;
+} Transacao;
 
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
 int carregar_usuarios(Usuario lista_usuarios[]);
@@ -39,4 +49,6 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
 
 void atualizar_cotacao(Cotacao *cotacao);
 
+void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moeda[], double taxa, double cotacao);
+void carregar_extrato(Usuario *usuario);
 #endif 
