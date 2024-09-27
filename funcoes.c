@@ -1,6 +1,5 @@
 #include "funcoes.h"
 
-
 // Função Cadastro
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   long long int cpf;
@@ -169,4 +168,91 @@ void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
     printf("\nSaque realizado com sucesso!\n");
     salvar_usuarios(lista_usuarios, num_usuarios);
   }
+}
+
+
+// Função Carregar Cotação
+void carregar_cotacao(Cotacao *cotacao){
+  FILE *file = fopen("cotacao.bin", "rb");
+  if (file == NULL) {
+    perror("Erro ao abrir o arquivo para carregar");
+  }
+  else {
+    fread(cotacao, sizeof(Cotacao), 1, file);
+  }
+  fclose(file);
+}
+
+// Função Salvar Cotação
+void salvar_cotacao(Cotacao cotacao){
+  FILE *file = fopen("cotacao.bin", "wb");
+  if (file == NULL) {// Função Salvar Cotação
+    perror("Erro ao abrir o arquivo para salvar");
+  }
+  else {
+    fwrite(&cotacao, sizeof(Cotacao), 1, file);
+  }
+  fclose(file);
+}
+
+
+// Função Comprar Criptomoedas
+void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao) {
+    int opcao, senha, opcao_confirmacao;;
+    double valor, valor_taxado, valor_cripto;
+    const char *nomes[] = {"Bitcoin", "Ethereum", "Ripple"};
+    double *cotas[] = {&cotacao.bitcoin, &cotacao.ethereum, &cotacao.ripple};
+
+    printf("\nEscolha a criptomoeda que deseja comprar:\n");
+    for (int i = 0; i < 3; i++) {
+        printf("%d. %s\n", i + 1, nomes[i]);
+    }
+    scanf("%d", &opcao);
+    opcao--; // Ajuste para índice de array
+
+    if (opcao < 0 || opcao >= 3) {
+        printf("Opção inválida\n");
+        return;
+    }
+
+    printf("Insira o valor que você deseja comprar em Reais (Sem incluir taxas):\n");
+    scanf("%lf", &valor);
+    if (opcao == 0) {valor_taxado = valor * 1.02;}
+    else {valor_taxado = valor * 1.01;}
+
+    if (valor_taxado > lista_usuarios[index_usuario].reais) {
+        printf("\nSaldo insuficiente\n");
+        return;
+    }
+
+    printf("Insira sua senha para confirmação:\n");
+    scanf("%d", &senha);
+    if (lista_usuarios[index_usuario].senha != senha) {
+        printf("\nSenha incorreta\n");
+        return;
+    }
+
+    valor_cripto = valor / (*cotas[opcao]);
+    printf("\nResumo da compra:\n");
+    printf("Valor em Reais com taxas: R$ %.2lf\n", valor_taxado);
+    printf("Valor em %s: %.8lf\n", nomes[opcao], valor_cripto);
+    printf("\n1. Confirmar Compra\n2. Cancelar Compra\n");
+    scanf("%d", &opcao_confirmacao);
+
+    if (opcao_confirmacao == 1) {
+        if (strcmp(nomes[opcao], "Bitcoin") == 0) {
+            lista_usuarios[index_usuario].bitcoin += valor_cripto;
+        } else if (strcmp(nomes[opcao], "Ethereum") == 0) {
+            lista_usuarios[index_usuario].ethereum += valor_cripto;
+        } else if (strcmp(nomes[opcao], "Ripple") == 0) {
+            lista_usuarios[index_usuario].ripple += valor_cripto;
+        }
+        lista_usuarios[index_usuario].reais -= valor_taxado;
+        printf("\nCompra realizada com sucesso!\n");
+        salvar_usuarios(lista_usuarios, num_usuarios);
+    } else if (opcao == 2) {
+        printf("\nCompra cancelada\n");
+    } else {
+        printf("Opção inválida\n");
+    }
 }

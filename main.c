@@ -13,6 +13,8 @@ int main(void) {
 
   // Declaração das variáveis
   Usuario lista_usuarios[MAX_USUARIOS];
+  Cotacao cotacao;
+  carregar_cotacao(&cotacao);
   int num_usuarios = carregar_usuarios(lista_usuarios);
   int opcao, login_efetuado, index_usuario;
   char lixo;
@@ -59,6 +61,7 @@ int main(void) {
               sacar(lista_usuarios, index_usuario, num_usuarios);
               continue;
             case 5: // Função Comprar Criptomoedas
+              comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
               continue;
             case 6: // Função Vender Criptomoedas
               continue;
