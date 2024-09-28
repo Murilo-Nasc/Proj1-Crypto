@@ -16,7 +16,15 @@ Esse projeto tem como objetivo implementar as funcionalidades de um sistema banc
 ## Tecnologias Utilizadas
 
 - Linguagem C
-- Bibliotecas padrão: `locale.h`, `stdio.h`, `stdlib.h`, `string.h`, `time.h` (EXPLICAR AS BIBLIOTECAS)
+- Bibliotecas padrão: `locale.h`, `stdio.h`, `stdlib.h`, `time.h`
+
+- **`locale.h`**: Utilizada para definir a localidade da aplicação, permitindo que mensagens e formatações estejam de acordo com as convenções da língua portuguesa.
+
+- **`stdio.h`**: Fornece funcionalidades para entrada e saída padrão, como `printf` e `scanf`. Essas funções são essenciais para interagir com o usuário, permitindo que o programa mostre mensagens e receba dados de entrada.
+
+- **`string.h`**: Contém funções para gerenciamento de memória, conversões e geração de números aleatórios (como `rand` e `srand`). Utilizada para gerar valores randômicos nas atualizações de cotação das criptomoedas.
+
+- **`time.h`**: Fornece funcionalidades relacionadas ao tempo e data. Usada para semear a função de geração de números aleatórios com `time(NULL)`, garantindo que as saídas sejam diferentes a cada execução do programa.
 
 ## Como Executar o Projeto
 
