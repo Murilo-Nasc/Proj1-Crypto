@@ -4,7 +4,7 @@
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   long long int cpf;
   int senha;
-  
+
   if (*num_usuarios >= MAX_USUARIOS) {
     printf("Limite de usuários atingido.\n");
   } else {
@@ -19,7 +19,7 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
 
       printf("\nDigite sua senha (6 dígitos):\n");
       scanf("%d", &senha);
-      
+
       if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
         printf("\nSenha inválida\n");
         continue;
@@ -47,7 +47,7 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       lista_usuarios[*num_usuarios].ethereum = 0.0;
       lista_usuarios[*num_usuarios].ripple = 0.0;
       (*num_usuarios)++;
-      
+
 
       // Salvar os usuários no arquivo
       salvar_usuarios(lista_usuarios, *num_usuarios);
@@ -145,10 +145,15 @@ void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
   double valor;
   printf("\nDigite o valor que deseja depositar em reais:\n");
   scanf("%lf", &valor);
-  lista_usuarios[index_usuario].reais += valor;
-  printf("\nDepósito realizado com sucesso!\n");
-  salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-  salvar_extrato(&lista_usuarios[index_usuario], "+", valor, "Reais", 0.0, 0.0);  // Registra a transação
+  if (valor > 0){
+    lista_usuarios[index_usuario].reais += valor;
+    printf("\nDepósito realizado com sucesso!\n");
+    salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
+    salvar_extrato(&lista_usuarios[index_usuario], "+", valor, "Reais", 0.0, 0.0);  // Registra a transação
+  }
+  else {
+    printf("Valor inválido (deve ser maior que zero)\n");
+  }
 }
 
 
@@ -158,21 +163,26 @@ void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
   int senha;
   printf("\nDigite o valor que deseja sacar em reais:\n");
   scanf("%lf", &valor);
-  if (valor > lista_usuarios[index_usuario].reais){
-    printf("\nSaldo insuficiente\n");
+  if (valor > 0){
+    if (valor > lista_usuarios[index_usuario].reais){
+      printf("\nSaldo insuficiente\n");
+    }
+    else{
+      printf("Insira sua senha:\n");
+      scanf("%d", &senha);
+      if (senha == lista_usuarios[index_usuario].senha){
+        lista_usuarios[index_usuario].reais -= valor;
+        printf("\nSaque realizado com sucesso!\n");
+        salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
+        salvar_extrato(&lista_usuarios[index_usuario], "-", valor, "Reais", 0.0, 0.0);  // Registra a transação
+      }
+      else {
+        printf("\nSenha incorreta\n");
+      }
+    }
   }
-  else{
-    printf("Insira sua senha:\n");
-    scanf("%d", &senha);
-    if (senha == lista_usuarios[index_usuario].senha){
-      lista_usuarios[index_usuario].reais -= valor;
-      printf("\nSaque realizado com sucesso!\n");
-      salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-      salvar_extrato(&lista_usuarios[index_usuario], "-", valor, "Reais", 0.0, 0.0);  // Registra a transação
-    }
-    else {
-      printf("\nSenha incorreta\n");
-    }
+  else {
+    printf("Valor inválido (deve ser maior que zero)\n");
   }
 }
 
@@ -223,6 +233,12 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
 
   printf("Insira o valor que você deseja comprar em Reais (Sem incluir taxas):\n");
   scanf("%lf", &valor);
+
+  if (valor <= 0) {
+    printf("Valor inválido (deve ser maior que zero)\n");
+    return;
+  }
+
   if (opcao == 0) {taxa = 1.02;}
   else {taxa = 1.01;}
   valor_taxado = valor * taxa;
@@ -287,6 +303,12 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
 
   printf("Insira o valor que você deseja vender em %s (Sem incluir taxas):\n", nomes[opcao]);
   scanf("%lf", &valor_cripto);
+
+  if (valor_cripto <= 0) {
+    printf("Valor inválido (deve ser maior que zero)\n");
+    return;
+  }
+
   if (opcao == 0) {
     taxa = 1.03;
     valor_cripto_taxado = valor_cripto * taxa;
@@ -376,11 +398,20 @@ void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moe
     return;
   }
 
+  // Obter o timestamp atual
+  char timestamp[20];
+  time_t now = time(NULL);
+  struct tm *tm_info = localtime(&now);
+  strftime(timestamp, sizeof(timestamp), "%d-%m-%Y %H:%M:%S", tm_info);
+
   // Escreve a transação no arquivo
-  fprintf(file, "%s %s %.4lf %s CT: %.2f TX: %.2f REAL: %.2f BTC: %.6f ETH: %.6f XRP: %.6f\n", __TIMESTAMP__, sinal, valor, moeda, cotacao, taxa, usuario->reais, usuario->bitcoin, usuario->ethereum, usuario->ripple);
+  fprintf(file, "%s %s %.4lf %s CT: %.2f TX: %.2f REAL: %.2f BTC: %.6f ETH: %.6f XRP: %.6f\n", 
+  timestamp, sinal, valor, moeda, cotacao, taxa, usuario->reais, 
+  usuario->bitcoin, usuario->ethereum, usuario->ripple);
 
   fclose(file);
 }
+
 
 
 // Função para carregar extrato (caso precise futuramente)

@@ -1,7 +1,6 @@
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include "funcoes.h" 
 #define MAX_USUARIOS 10
@@ -48,7 +47,7 @@ int main(void) {
 
           scanf("%d", &opcao);
           scanf("%c", &lixo);
-          
+
           switch (opcao){
             case 1: // Função Consultar Saldo
               mostrar_saldo(lista_usuarios, index_usuario);
@@ -78,7 +77,7 @@ int main(void) {
           }
           break;
         }
-        
+
       } else {
         printf("Login não efetuado (Senha ou CPF incorretos)\n");
         continue;
