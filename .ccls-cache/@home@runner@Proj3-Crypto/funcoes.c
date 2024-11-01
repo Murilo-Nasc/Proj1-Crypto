@@ -10,11 +10,7 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   } else {
     while (1) {
       printf("\nDigite seu CPF (11 caracteres):\n");
-      if (scanf("%lld", &cpf) != 1) {
-        printf("\nEntrada inválida. Tente novamente.\n");
-        while (getchar() != '\n'); // Limpa o buffer
-        continue;
-      }
+      scanf("%lld", &cpf);
 
       if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
         printf("\nCPF inválido\n");
@@ -22,11 +18,7 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       }
 
       printf("\nDigite sua senha (6 dígitos):\n");
-      if (scanf("%d", &senha) != 1) {
-        printf("\nEntrada inválida. Tente novamente.\n");
-        while (getchar() != '\n'); // Limpa o buffer
-        continue;
-      }
+      scanf("%d", &senha);
 
       if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
         printf("\nSenha inválida\n");
@@ -100,12 +92,8 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
   int senha;
 
   while (1) {
-    printf("\nDigite seu CPF (11 caracteres):\n");
-    if (scanf("%lld", &cpf) != 1) {
-      printf("\nEntrada inválida. Tente novamente.\n");
-      while (getchar() != '\n'); // Limpa o buffer
-      continue;
-    }
+    printf("\nDigite seu CPF (11 dígitos):\n");
+    scanf("%lld", &cpf);
 
     if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
       printf("\nCPF inválido\n");
@@ -113,11 +101,7 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
     }
 
     printf("\nDigite sua senha (6 dígitos):\n");
-    if (scanf("%d", &senha) != 1) {
-      printf("\nEntrada inválida. Tente novamente.\n");
-      while (getchar() != '\n'); // Limpa o buffer
-      continue;
-    }
+    scanf("%d", &senha);
 
     if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
       printf("\nSenha inválida\n");
@@ -183,14 +167,9 @@ void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
     if (valor > lista_usuarios[index_usuario].reais){
       printf("\nSaldo insuficiente\n");
     }
-    else {
+    else{
       printf("Insira sua senha:\n");
-      if (scanf("%d", &senha) != 1) {
-        printf("\nEntrada inválida. Tente novamente.\n");
-        while (getchar() != '\n'); // Limpa o buffer
-        return;
-      }
-      
+      scanf("%d", &senha);
       if (senha == lista_usuarios[index_usuario].senha){
         lista_usuarios[index_usuario].reais -= valor;
         printf("\nSaque realizado com sucesso!\n");
@@ -270,11 +249,7 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
   }
 
   printf("Insira sua senha para confirmação:\n");
-  if (scanf("%d", &senha) != 1) {
-    printf("\nEntrada inválida. Tente novamente.\n");
-    while (getchar() != '\n'); // Limpa o buffer
-    return;
-  }
+  scanf("%d", &senha);
   if (lista_usuarios[index_usuario].senha != senha) {
     printf("\nSenha incorreta\n");
     return;
@@ -359,12 +334,8 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     }
   }
 
-  printf("Insira sua senha para confirmação:\n");;
-  if (scanf("%d", &senha) != 1) {
-    printf("\nEntrada inválida. Tente novamente.\n");
-    while (getchar() != '\n'); // Limpa o buffer
-    return;
-  }
+  printf("Insira sua senha para confirmação:\n");
+  scanf("%d", &senha);
   if (lista_usuarios[index_usuario].senha != senha) {
     printf("\nSenha incorreta\n");
     return;
