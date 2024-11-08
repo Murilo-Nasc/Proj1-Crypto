@@ -558,10 +558,57 @@ void carregar_extrato(Usuario *usuario, int index_usuario) {
 // PÁGINA DO ADM
 void adm() {
   Admin dados_adm;
-  int logado;
+  int logado, opcao;
+  char lixo;
+  Cotacao cotacao;
+  carregar_cotacao(&cotacao);
+  
   carregar_adm(&dados_adm);
   login_adm(dados_adm);
-  
+  while (1) {
+    printf("\nEscolha uma opção:\n");
+    printf("1 - Cadastrar novo investidor\n");
+    printf("2 - Excluir investidor\n");
+    printf("3 - Cadastrar criptomoeda\n");
+    printf("4 - Excluir criptomoeda\n");
+    printf("5 - Consultar saldo de investidor\n");
+    printf("6 - Consultar extrato de investidor\n");
+    printf("7 - Atualizar cotação\n");
+    printf("8 - Sair\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    scanf("%c", &lixo); // Limpa o buffer
+
+    switch (opcao) {
+      case 1: // Função Consultar Saldo
+          
+        continue;
+      case 2: // Função Consultar Extrato
+
+        continue;
+      case 3: // Função Depositar
+
+        continue;
+      case 4: // Função Sacar
+
+        continue;
+      case 5: // Função Comprar Criptomoedas
+          
+        continue;
+      case 6: // Função Vender Criptomoedas
+
+        continue;
+      case 7: // Função Atualizar Cotação
+        atualizar_cotacao(&cotacao);
+        continue;
+      case 8: // Função Sair
+        printf("Adeus! Volte sempre!\n");
+        break;
+      default:
+        printf("Opção inválida!\n");
+        continue;
+      }
+  }
 }
 
 
@@ -580,6 +627,7 @@ void carregar_adm(Admin *dados_adm) {
 void login_adm(Admin dados_adm) {
   long long cpf;
   int senha;
+  
 
   while (1) {
     printf("\nLOGIN DE ADMINISTRADOR\n");
@@ -609,7 +657,7 @@ void login_adm(Admin dados_adm) {
 
     if (cpf == dados_adm.cpf && senha == dados_adm.senha) {
       printf("\nLogin realizado com sucesso!\n");
-      return 1;
+      break;
     } else {
       printf("\nCPF ou senha incorretos\n");
     }
