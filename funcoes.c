@@ -91,11 +91,6 @@ void investidor() {
   }
 }
 
-// PÁGINA DO ADM
-void adm() {
-  printf("oi");
-}
-
 // Função Cadastro
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   long long int cpf;
@@ -557,4 +552,67 @@ void carregar_extrato(Usuario *usuario, int index_usuario) {
   }
 
   fclose(file);
+}
+
+
+// PÁGINA DO ADM
+void adm() {
+  Admin dados_adm;
+  int logado;
+  carregar_adm(&dados_adm);
+  login_adm(dados_adm);
+  
+}
+
+
+// Carregar ADM
+void carregar_adm(Admin *dados_adm) {
+  FILE *file = fopen("admin.bin", "rb"); 
+  if (file == NULL) {
+    perror("Erro ao abrir o arquivo para carregar");
+  }
+  int num_usuarios = fread(dados_adm, sizeof(Admin), 1, file);  
+  
+  fclose(file);
+}
+
+// Login do ADM
+void login_adm(Admin dados_adm) {
+  long long cpf;
+  int senha;
+
+  while (1) {
+    printf("\nLOGIN DE ADMINISTRADOR\n");
+    printf("\nDigite seu CPF (11 caracteres):\n");
+    if (scanf("%lld", &cpf) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
+
+    if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
+      printf("\nCPF inválido\n");
+      continue;
+    }
+
+    printf("\nDigite sua senha (6 dígitos):\n");
+    if (scanf("%d", &senha) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
+
+    if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
+      printf("\nSenha inválida\n");
+      continue;
+    }
+
+    if (cpf == dados_adm.cpf && senha == dados_adm.senha) {
+      printf("\nLogin realizado com sucesso!\n");
+      return 1;
+    } else {
+      printf("\nCPF ou senha incorretos\n");
+    }
+    
+  }
 }
