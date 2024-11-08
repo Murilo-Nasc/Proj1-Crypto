@@ -32,6 +32,9 @@ typedef struct {
     double saldo_ripple;
 } Transacao;
 
+void adm();
+void investidor();
+
 void salvar_usuarios(Usuario lista_usuarios[], int num_usuarios);
 int carregar_usuarios(Usuario lista_usuarios[]);
 void cadastro(Usuario lista_usuarios[], int *num_usuarios);

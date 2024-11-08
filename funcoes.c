@@ -1,5 +1,101 @@
 #include "funcoes.h"
 
+// PÁGINA DO INVESTIDOR
+void investidor() {
+  // Declaração das variáveis
+  Usuario lista_usuarios[MAX_USUARIOS];
+  Cotacao cotacao;
+  carregar_cotacao(&cotacao);
+  int num_usuarios = carregar_usuarios(lista_usuarios);
+  int opcao, login_efetuado, index_usuario;
+  char lixo;
+
+  // Código Principal para investidor
+  printf("Bem-vindo à página do investidor!\n");
+  while (1) {
+    printf("Escolha uma opção:\n");
+    printf("1 - Login\n");
+    printf("2 - Cadastro\n");
+    printf("3 - Sair\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    scanf("%c", &lixo); // Limpa o buffer
+
+    switch (opcao) {
+      case 1: // Função Login
+        login_efetuado = login(lista_usuarios, num_usuarios, &index_usuario);
+        if (login_efetuado) {
+          printf("Login efetuado com sucesso!\n");
+
+          // Menu de opções do investidor
+          while (1) {
+            printf("\nEscolha uma opção:\n");
+            printf("1 - Consultar saldo\n");
+            printf("2 - Consultar extrato\n");
+            printf("3 - Depositar\n");
+            printf("4 - Sacar\n");
+            printf("5 - Comprar criptomoedas\n");
+            printf("6 - Vender criptomoedas\n");
+            printf("7 - Atualizar cotação\n");
+            printf("8 - Sair\n");
+            printf("Escolha uma opção: ");
+            scanf("%d", &opcao);
+            scanf("%c", &lixo); // Limpa o buffer
+
+            switch (opcao) {
+              case 1: // Função Consultar Saldo
+                mostrar_saldo(lista_usuarios, index_usuario); 
+                continue;
+              case 2: // Função Consultar Extrato
+                carregar_extrato(lista_usuarios, index_usuario);
+                continue;
+              case 3: // Função Depositar
+                depositar(lista_usuarios, index_usuario, num_usuarios);
+                continue;
+              case 4: // Função Sacar
+                sacar(lista_usuarios, index_usuario, num_usuarios);
+                continue;
+              case 5: // Função Comprar Criptomoedas
+                comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                continue;
+              case 6: // Função Vender Criptomoedas
+                vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                continue;
+              case 7: // Função Atualizar Cotação
+                atualizar_cotacao(&cotacao);
+                continue;
+              case 8: // Função Sair
+                printf("Adeus! Volte sempre!\n");
+                break;
+            }
+            break;
+          }
+        } else {
+          printf("Login não efetuado. (Senha ou CPF incorretos)\n");
+          continue;
+        }
+        break;
+
+      case 2: // Função Cadastro
+        cadastro(lista_usuarios, &num_usuarios);
+        continue;
+
+      case 3: // Sair
+        printf("Adeus! Volte sempre!\n");
+        return;
+
+      default: // Opção Inválida
+        printf("\nOpção inválida. Tente novamente.\n");
+        continue;
+    }
+  }
+}
+
+// PÁGINA DO ADM
+void adm() {
+  printf("oi");
+}
+
 // Função Cadastro
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   long long int cpf;

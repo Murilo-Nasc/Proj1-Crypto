@@ -1,5 +1,101 @@
 #include "funcoes.h"
 
+// PÁGINA DO INVESTIDOR
+void investidor() {
+  // Declaração das variáveis
+  Usuario lista_usuarios[MAX_USUARIOS];
+  Cotacao cotacao;
+  carregar_cotacao(&cotacao);
+  int num_usuarios = carregar_usuarios(lista_usuarios);
+  int opcao, login_efetuado, index_usuario;
+  char lixo;
+
+  // Código Principal para investidor
+  printf("Bem-vindo à página do investidor!\n");
+  while (1) {
+    printf("Escolha uma opção:\n");
+    printf("1 - Login\n");
+    printf("2 - Cadastro\n");
+    printf("3 - Sair\n");
+    printf("Escolha uma opção: ");
+    scanf("%d", &opcao);
+    scanf("%c", &lixo); // Limpa o buffer
+
+    switch (opcao) {
+      case 1: // Função Login
+        login_efetuado = login(lista_usuarios, num_usuarios, &index_usuario);
+        if (login_efetuado) {
+          printf("Login efetuado com sucesso!\n");
+
+          // Menu de opções do investidor
+          while (1) {
+            printf("\nEscolha uma opção:\n");
+            printf("1 - Consultar saldo\n");
+            printf("2 - Consultar extrato\n");
+            printf("3 - Depositar\n");
+            printf("4 - Sacar\n");
+            printf("5 - Comprar criptomoedas\n");
+            printf("6 - Vender criptomoedas\n");
+            printf("7 - Atualizar cotação\n");
+            printf("8 - Sair\n");
+            printf("Escolha uma opção: ");
+            scanf("%d", &opcao);
+            scanf("%c", &lixo); // Limpa o buffer
+
+            switch (opcao) {
+              case 1: // Função Consultar Saldo
+                mostrar_saldo(lista_usuarios, index_usuario); 
+                continue;
+              case 2: // Função Consultar Extrato
+                carregar_extrato(lista_usuarios, index_usuario);
+                continue;
+              case 3: // Função Depositar
+                depositar(lista_usuarios, index_usuario, num_usuarios);
+                continue;
+              case 4: // Função Sacar
+                sacar(lista_usuarios, index_usuario, num_usuarios);
+                continue;
+              case 5: // Função Comprar Criptomoedas
+                comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                continue;
+              case 6: // Função Vender Criptomoedas
+                vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                continue;
+              case 7: // Função Atualizar Cotação
+                atualizar_cotacao(&cotacao);
+                continue;
+              case 8: // Função Sair
+                printf("Adeus! Volte sempre!\n");
+                break;
+            }
+            break;
+          }
+        } else {
+          printf("Login não efetuado. (Senha ou CPF incorretos)\n");
+          continue;
+        }
+        break;
+
+      case 2: // Função Cadastro
+        cadastro(lista_usuarios, &num_usuarios);
+        continue;
+
+      case 3: // Sair
+        printf("Adeus! Volte sempre!\n");
+        return;
+
+      default: // Opção Inválida
+        printf("\nOpção inválida. Tente novamente.\n");
+        continue;
+    }
+  }
+}
+
+// PÁGINA DO ADM
+void adm() {
+  printf("oi");
+}
+
 // Função Cadastro
 void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   long long int cpf;
@@ -10,7 +106,11 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
   } else {
     while (1) {
       printf("\nDigite seu CPF (11 caracteres):\n");
-      scanf("%lld", &cpf);
+      if (scanf("%lld", &cpf) != 1) {
+        printf("\nEntrada inválida. Tente novamente.\n");
+        while (getchar() != '\n'); // Limpa o buffer
+        continue;
+      }
 
       if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
         printf("\nCPF inválido\n");
@@ -18,7 +118,11 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       }
 
       printf("\nDigite sua senha (6 dígitos):\n");
-      scanf("%d", &senha);
+      if (scanf("%d", &senha) != 1) {
+        printf("\nEntrada inválida. Tente novamente.\n");
+        while (getchar() != '\n'); // Limpa o buffer
+        continue;
+      }
 
       if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
         printf("\nSenha inválida\n");
@@ -92,8 +196,12 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
   int senha;
 
   while (1) {
-    printf("\nDigite seu CPF (11 dígitos):\n");
-    scanf("%lld", &cpf);
+    printf("\nDigite seu CPF (11 caracteres):\n");
+    if (scanf("%lld", &cpf) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
 
     if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
       printf("\nCPF inválido\n");
@@ -101,7 +209,11 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
     }
 
     printf("\nDigite sua senha (6 dígitos):\n");
-    scanf("%d", &senha);
+    if (scanf("%d", &senha) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
 
     if (senha < 100000 || senha > 999999) {  // Verifica se a senha tem 6 dígitos
       printf("\nSenha inválida\n");
@@ -167,9 +279,14 @@ void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
     if (valor > lista_usuarios[index_usuario].reais){
       printf("\nSaldo insuficiente\n");
     }
-    else{
+    else {
       printf("Insira sua senha:\n");
-      scanf("%d", &senha);
+      if (scanf("%d", &senha) != 1) {
+        printf("\nEntrada inválida. Tente novamente.\n");
+        while (getchar() != '\n'); // Limpa o buffer
+        return;
+      }
+      
       if (senha == lista_usuarios[index_usuario].senha){
         lista_usuarios[index_usuario].reais -= valor;
         printf("\nSaque realizado com sucesso!\n");
@@ -249,7 +366,11 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
   }
 
   printf("Insira sua senha para confirmação:\n");
-  scanf("%d", &senha);
+  if (scanf("%d", &senha) != 1) {
+    printf("\nEntrada inválida. Tente novamente.\n");
+    while (getchar() != '\n'); // Limpa o buffer
+    return;
+  }
   if (lista_usuarios[index_usuario].senha != senha) {
     printf("\nSenha incorreta\n");
     return;
@@ -334,8 +455,12 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     }
   }
 
-  printf("Insira sua senha para confirmação:\n");
-  scanf("%d", &senha);
+  printf("Insira sua senha para confirmação:\n");;
+  if (scanf("%d", &senha) != 1) {
+    printf("\nEntrada inválida. Tente novamente.\n");
+    while (getchar() != '\n'); // Limpa o buffer
+    return;
+  }
   if (lista_usuarios[index_usuario].senha != senha) {
     printf("\nSenha incorreta\n");
     return;
