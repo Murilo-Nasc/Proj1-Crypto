@@ -50,7 +50,7 @@ int main(void) {
 
           switch (opcao){
             case 1: // Função Consultar Saldo
-              mostrar_saldo(lista_usuarios, index_usuario);
+              mostrar_saldo(lista_usuarios, index_usuario); 
               continue;
             case 2: // Função Consultar Extrato
               printf("\n");
