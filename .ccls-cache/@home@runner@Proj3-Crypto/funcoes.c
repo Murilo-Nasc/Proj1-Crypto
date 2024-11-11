@@ -580,22 +580,22 @@ void adm() {
     scanf("%c", &lixo); // Limpa o buffer
 
     switch (opcao) {
-      case 1: // Função Consultar Saldo
+      case 1: // Função Cadastrar novo investidor
           
         continue;
-      case 2: // Função Consultar Extrato
+      case 2: // Função Excluir investidor
 
         continue;
-      case 3: // Função Depositar
+      case 3: // Função Cadastrar criptomoeda
 
         continue;
-      case 4: // Função Sacar
+      case 4: // Função Excluir criptomoeda
 
         continue;
-      case 5: // Função Comprar Criptomoedas
+      case 5: // Função Consultar saldo de investidor
           
         continue;
-      case 6: // Função Vender Criptomoedas
+      case 6: // Consultar extrato de investidor
 
         continue;
       case 7: // Função Atualizar Cotação
@@ -608,6 +608,7 @@ void adm() {
         printf("Opção inválida!\n");
         continue;
       }
+    break;
   }
 }
 
