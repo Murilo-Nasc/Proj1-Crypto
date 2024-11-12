@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #define MAX_USUARIOS 10
 #define MAX_TRANSACOES 100
 
@@ -14,6 +15,7 @@ typedef struct {
 } Admin;
 
 typedef struct {
+  char nome[50];
   long long int cpf;
   int senha;
   double reais;
