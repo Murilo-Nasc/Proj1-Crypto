@@ -25,7 +25,7 @@ void investidor() {
       case 1: // Função Login
         login_efetuado = login(lista_usuarios, num_usuarios, &index_usuario);
         if (login_efetuado) {
-          printf("Login efetuado com sucesso!\n");
+          printf("Login efetuado com sucesso! Bem vindo, %s\n", lista_usuarios[index_usuario].nome);
 
           // Menu de opções do investidor
           while (1) {
@@ -100,7 +100,11 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
     printf("Limite de usuários atingido.\n");
   } else {
     while (1) {
-      printf("\nDigite seu CPF (11 caracteres):\n");
+      printf("\nDigite o nome:\n");
+      scanf("%s", lista_usuarios[*num_usuarios].nome);
+      lista_usuarios[*num_usuarios].nome[strcspn(lista_usuarios[*num_usuarios].nome, "\n")] = 0;
+      
+      printf("\nDigite o CPF (11 caracteres):\n");
       if (scanf("%lld", &cpf) != 1) {
         printf("\nEntrada inválida. Tente novamente.\n");
         while (getchar() != '\n'); // Limpa o buffer
@@ -112,7 +116,7 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
         continue;
       }
 
-      printf("\nDigite sua senha (6 dígitos):\n");
+      printf("\nDigite a senha (6 dígitos):\n");
       if (scanf("%d", &senha) != 1) {
         printf("\nEntrada inválida. Tente novamente.\n");
         while (getchar() != '\n'); // Limpa o buffer
@@ -560,6 +564,8 @@ void adm() {
   Admin dados_adm;
   int logado, opcao;
   char lixo;
+  Usuario lista_usuarios[MAX_USUARIOS];
+  int num_usuarios = carregar_usuarios(lista_usuarios);
   Cotacao cotacao;
   carregar_cotacao(&cotacao);
   
@@ -581,7 +587,8 @@ void adm() {
 
     switch (opcao) {
       case 1: // Função Cadastrar novo investidor
-          
+        cadastro(lista_usuarios, &num_usuarios);
+        printf("Usuário %s cadastrado como investidor\n", lista_usuarios[num_usuarios - 1].nome);
         continue;
       case 2: // Função Excluir investidor
 
