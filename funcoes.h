@@ -60,5 +60,6 @@ void carregar_extrato(Usuario *lista_usuarios, int index_usuario);
 void adm();
 void carregar_adm(Admin *dados_adm);
 void login_adm();
+void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios);
 
 #endif

@@ -591,7 +591,7 @@ void adm() {
         printf("Usuário %s cadastrado como investidor\n", lista_usuarios[num_usuarios - 1].nome);
         continue;
       case 2: // Função Excluir investidor
-
+        excluir_investidor(lista_usuarios, &num_usuarios);
         continue;
       case 3: // Função Cadastrar criptomoeda
 
@@ -670,5 +670,57 @@ void login_adm(Admin dados_adm) {
       printf("\nCPF ou senha incorretos\n");
     }
     
+  }
+}
+
+
+// Exclusão de Investidor
+void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios) {
+  long long cpf;
+  int index, opcao;
+  char lixo;
+  
+  while (1) {
+    printf("\nInsira o CPF do investidor que deseja excluir:\n");
+    if (scanf("%lld", &cpf) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
+
+    if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
+      printf("\nCPF inválido\n");
+      continue;
+    }
+
+    // Verifica se o CPF e a senha correspondem a um usuário válido
+    int usuario_encontrado = 0;
+    for (int i = 0; i < *num_usuarios; i++) {
+      if (lista_usuarios[i].cpf == cpf) {
+        usuario_encontrado = 1;
+        index = i;
+        break;
+      }
+    }
+    
+    if (!usuario_encontrado) {
+      printf("\nCPF não encontrado\n");
+      break;
+    } else if (usuario_encontrado) {
+      printf("Dados do investidor:\n");
+      printf("Nome: %s\nCPF: %lld\nSenha: %d\n", lista_usuarios[index].nome, lista_usuarios[index].cpf, lista_usuarios[index].senha);
+      printf("Deseja excluir este investidor? (1 - Sim, 2 - Não)\n");
+      scanf("%d", &opcao);
+      scanf("%c", &lixo);
+      if (opcao) {
+        for (int i = index; i < *num_usuarios - 1; i++) {
+          lista_usuarios[i] = lista_usuarios[i + 1];
+        }
+        (*num_usuarios)--;
+        salvar_usuarios(lista_usuarios, *num_usuarios);
+        printf("Usuário excluido com sucesso\n");
+        break;
+      }
+    }
   }
 }
