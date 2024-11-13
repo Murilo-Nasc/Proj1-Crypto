@@ -61,5 +61,7 @@ void adm();
 void carregar_adm(Admin *dados_adm);
 void login_adm();
 void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios);
+void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios);
+void extrato_investidor(Usuario lista_usuarios[], int *num_usuarios);
 
 #endif

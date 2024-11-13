@@ -600,10 +600,10 @@ void adm() {
 
         continue;
       case 5: // Função Consultar saldo de investidor
-          
+        saldo_investidor(lista_usuarios, &num_usuarios);
         continue;
       case 6: // Consultar extrato de investidor
-
+        extrato_investidor(lista_usuarios, &num_usuarios);
         continue;
       case 7: // Função Atualizar Cotação
         atualizar_cotacao(&cotacao);
@@ -703,6 +703,112 @@ void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios) {
       }
     }
     
+    if (!usuario_encontrado) {
+      printf("\nCPF não encontrado\n");
+      break;
+    } else if (usuario_encontrado) {
+      printf("Dados do investidor:\n");
+      printf("Nome: %s\nCPF: %lld\nSenha: %d\n", lista_usuarios[index].nome, lista_usuarios[index].cpf, lista_usuarios[index].senha);
+      printf("Deseja excluir este investidor? (1 - Sim, 2 - Não)\n");
+      scanf("%d", &opcao);
+      scanf("%c", &lixo);
+      if (opcao) {
+        for (int i = index; i < *num_usuarios - 1; i++) {
+          lista_usuarios[i] = lista_usuarios[i + 1];
+        }
+        (*num_usuarios)--;
+        salvar_usuarios(lista_usuarios, *num_usuarios);
+        printf("Usuário excluido com sucesso\n");
+        break;
+      }
+    }
+  }
+}
+
+
+// Função Consultar saldo de investidor
+void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios){
+long long cpf;
+  int index, opcao;
+  char lixo;
+
+  while (1) {
+    printf("\nInsira o CPF do investidor que deseja consultar:\n");
+    if (scanf("%lld", &cpf) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
+
+    if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
+      printf("\nCPF inválido\n");
+      continue;
+    }
+
+    // Verifica se o CPF e a senha correspondem a um usuário válido
+    int usuario_encontrado = 0;
+    for (int i = 0; i < *num_usuarios; i++) {
+      if (lista_usuarios[i].cpf == cpf) {
+        usuario_encontrado = 1;
+        index = i;
+        break;
+      }
+    }
+
+    if (!usuario_encontrado) {
+      printf("\nCPF não encontrado\n");
+      break;
+    } else if (usuario_encontrado) {
+      printf("\nDados do investidor:\n\n");
+      printf("Nome: %s\nCPF: %lld\nSenha: %d\n", lista_usuarios[index].nome, lista_usuarios[index].cpf, lista_usuarios[index].senha);
+      printf("\nSaldo do usuário:\n\n");
+      printf("Reais: %.2lf\n", lista_usuarios[index].reais);
+      printf("Bitcoin: %.8lf\n", lista_usuarios[index].bitcoin);
+      printf("Ethereum: %.8lf\n", lista_usuarios[index].ethereum);
+      printf("Ripple: %.8lf\n", lista_usuarios[index].ripple);
+      printf("\nDeseja consultar o saldo de outro investidor? (1 - Sim, 2 - Não)\n");
+      scanf("%d", &opcao);
+      scanf("%c", &lixo);
+      if (opcao == 1) {
+        continue;
+      }
+      else {
+        break;
+      }
+    }
+  }
+}
+
+
+// Consultar extrato de investidor
+void extrato_investidor(Usuario lista_usuarios[], int *num_usuarios){
+long long cpf;
+  int index, opcao;
+  char lixo;
+
+  while (1) {
+    printf("\nInsira o CPF do investidor que deseja excluir:\n");
+    if (scanf("%lld", &cpf) != 1) {
+      printf("\nEntrada inválida. Tente novamente.\n");
+      while (getchar() != '\n'); // Limpa o buffer
+      continue;
+    }
+
+    if (cpf < 10000000000LL || cpf > 99999999999LL) {  // Verifica se o CPF tem 11 dígitos
+      printf("\nCPF inválido\n");
+      continue;
+    }
+
+    // Verifica se o CPF e a senha correspondem a um usuário válido
+    int usuario_encontrado = 0;
+    for (int i = 0; i < *num_usuarios; i++) {
+      if (lista_usuarios[i].cpf == cpf) {
+        usuario_encontrado = 1;
+        index = i;
+        break;
+      }
+    }
+
     if (!usuario_encontrado) {
       printf("\nCPF não encontrado\n");
       break;
