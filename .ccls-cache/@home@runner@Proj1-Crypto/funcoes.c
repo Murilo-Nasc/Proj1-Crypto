@@ -787,7 +787,7 @@ long long cpf;
   char lixo;
 
   while (1) {
-    printf("\nInsira o CPF do investidor que deseja excluir:\n");
+    printf("\nInsira o CPF do investidor que deseja consultar:\n");
     if (scanf("%lld", &cpf) != 1) {
       printf("\nEntrada inválida. Tente novamente.\n");
       while (getchar() != '\n'); // Limpa o buffer
@@ -813,18 +813,17 @@ long long cpf;
       printf("\nCPF não encontrado\n");
       break;
     } else if (usuario_encontrado) {
-      printf("Dados do investidor:\n");
+      printf("\nDados do investidor:\n\n");
       printf("Nome: %s\nCPF: %lld\nSenha: %d\n", lista_usuarios[index].nome, lista_usuarios[index].cpf, lista_usuarios[index].senha);
-      printf("Deseja excluir este investidor? (1 - Sim, 2 - Não)\n");
+      printf("\nExtrato do usuário:\n\n");
+      carregar_extrato(lista_usuarios, index);
+      printf("\nDeseja consultar o extrato de outro investidor? (1 - Sim, 2 - Não)\n");
       scanf("%d", &opcao);
       scanf("%c", &lixo);
-      if (opcao) {
-        for (int i = index; i < *num_usuarios - 1; i++) {
-          lista_usuarios[i] = lista_usuarios[i + 1];
-        }
-        (*num_usuarios)--;
-        salvar_usuarios(lista_usuarios, *num_usuarios);
-        printf("Usuário excluido com sucesso\n");
+      if (opcao == 1) {
+        continue;
+      }
+      else {
         break;
       }
     }
