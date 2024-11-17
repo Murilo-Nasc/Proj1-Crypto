@@ -24,12 +24,6 @@ typedef struct {
 } Usuario;
 
 typedef struct {
-  double bitcoin;
-  double ethereum;
-  double ripple;
-} Cotacao;
-
-typedef struct {
     char tempo[20];
     double deposito;
     double saldo_reais;
@@ -54,11 +48,9 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario);
 void mostrar_saldo(Usuario lista_usuarios[], int index_usuario, int num_cripto, Cripto lista_cripto[]);
 void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios, int num_cripto, Cripto lista_cripto[]);
 void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios, int num_cripto, Cripto lista_cripto[]);
-void carregar_cotacao(Cotacao *cotacao);
-void salvar_cotacao(Cotacao cotacao);
-void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao, int num_cripto, Cripto lista_cripto[]);
-void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao, int num_cripto, Cripto lista_cripto[]);
-void atualizar_cotacao(Cotacao *cotacao);
+void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, int num_cripto, Cripto lista_cripto[]);
+void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, int num_cripto, Cripto lista_cripto[]);
+void atualizar_cotacao(Cripto lista_cripto[], int num_cripto);
 void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moeda[], double taxa, double cotacao, int num_criptos, Cripto lista_cripto[]);
 void carregar_extrato(Usuario *lista_usuarios, int index_usuario);
 
