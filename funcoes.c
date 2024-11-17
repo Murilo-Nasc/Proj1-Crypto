@@ -9,6 +9,9 @@ void investidor() {
   int num_usuarios = carregar_usuarios(lista_usuarios);
   int opcao, login_efetuado, index_usuario;
   char lixo;
+  int num_cripto;
+  Cripto lista_cripto[MAX_CRIPTO];
+  carregar_cripto(lista_cripto, &num_cripto);
 
   // Código Principal para investidor
   printf("Bem-vindo à página do investidor!\n");
@@ -44,22 +47,22 @@ void investidor() {
 
             switch (opcao) {
               case 1: // Função Consultar Saldo
-                mostrar_saldo(lista_usuarios, index_usuario); 
+                mostrar_saldo(lista_usuarios, index_usuario, num_cripto, lista_cripto); 
                 continue;
               case 2: // Função Consultar Extrato
                 carregar_extrato(lista_usuarios, index_usuario);
                 continue;
               case 3: // Função Depositar
-                depositar(lista_usuarios, index_usuario, num_usuarios);
+                depositar(lista_usuarios, index_usuario, num_usuarios, num_cripto, lista_cripto);
                 continue;
               case 4: // Função Sacar
-                sacar(lista_usuarios, index_usuario, num_usuarios);
+                sacar(lista_usuarios, index_usuario, num_usuarios, num_cripto, lista_cripto);
                 continue;
               case 5: // Função Comprar Criptomoedas
-                comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                comprar_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao, num_cripto, lista_cripto);
                 continue;
               case 6: // Função Vender Criptomoedas
-                vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao);
+                vender_criptomoedas(lista_usuarios, index_usuario, num_usuarios, cotacao, num_cripto, lista_cripto);
                 continue;
               case 7: // Função Atualizar Cotação
                 atualizar_cotacao(&cotacao);
@@ -77,7 +80,7 @@ void investidor() {
         break;
 
       case 2: // Função Cadastro
-        cadastro(lista_usuarios, &num_usuarios);
+        cadastro(lista_usuarios, &num_usuarios, num_cripto);
         continue;
 
       case 3: // Sair
@@ -92,7 +95,7 @@ void investidor() {
 }
 
 // Função Cadastro
-void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
+void cadastro(Usuario lista_usuarios[], int *num_usuarios, int num_cripto) {
   long long int cpf;
   int senha;
 
@@ -145,10 +148,9 @@ void cadastro(Usuario lista_usuarios[], int *num_usuarios) {
       // Armazenar o usuário no array
       lista_usuarios[*num_usuarios].cpf = cpf;
       lista_usuarios[*num_usuarios].senha = senha;
-      lista_usuarios[*num_usuarios].reais = 0.0;
-      lista_usuarios[*num_usuarios].bitcoin = 0.0;
-      lista_usuarios[*num_usuarios].ethereum = 0.0;
-      lista_usuarios[*num_usuarios].ripple = 0.0;
+      for (int i = 0; i < num_cripto; i++) {
+        lista_usuarios[*num_usuarios].cripto[i] = 0;
+      }
       (*num_usuarios)++;
 
 
@@ -239,20 +241,20 @@ int login(Usuario lista_usuarios[], int num_usuarios, int *index_usuario) {
 
 
 // Função Mostrar Saldo
-void mostrar_saldo(Usuario lista_usuarios[], int index_usuario){
+void mostrar_saldo(Usuario lista_usuarios[], int index_usuario, int num_cripto, Cripto lista_cripto[]) {
   printf("\nSeus dados:\n");
   printf("CPF: %lld\n", lista_usuarios[index_usuario].cpf);
   printf("Senha: %d\n", lista_usuarios[index_usuario].senha);
   printf("\nSeu saldo:\n");
   printf("Reais: R$ %.2lf\n", lista_usuarios[index_usuario].reais);
-  printf("Bitcoin: %.8lf BTC\n", lista_usuarios[index_usuario].bitcoin);
-  printf("Ethereum: %.8lf ETH\n", lista_usuarios[index_usuario].ethereum);
-  printf("Ripple: %.8lf XRP\n", lista_usuarios[index_usuario].ripple);
+  for (int i = 0, j = 0; i < num_cripto; i++) {
+    printf("%s: %.2lf\n", lista_cripto[i].nome, lista_usuarios[index_usuario].cripto[i]);
+  }
 }
 
 
 // Função Depósito
-void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
+void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios, int num_cripto, Cripto lista_cripto[]){
   double valor;
   printf("\nDigite o valor que deseja depositar em reais:\n");
   scanf("%lf", &valor);
@@ -260,7 +262,7 @@ void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
     lista_usuarios[index_usuario].reais += valor;
     printf("\nDepósito realizado com sucesso!\n");
     salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-    salvar_extrato(&lista_usuarios[index_usuario], "+", valor, "Reais", 0.0, 0.0);  // Registra a transação
+    salvar_extrato(&lista_usuarios[index_usuario], "+", valor, "Reais", 0.0, 0.0, num_cripto, lista_cripto);  // Registra a transação
   }
   else {
     printf("Valor inválido (deve ser maior que zero)\n");
@@ -269,7 +271,7 @@ void depositar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
 
 
 // Função Saque
-void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
+void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios , int num_cripto, Cripto lista_cripto[]){
   double valor;
   int senha;
   printf("\nDigite o valor que deseja sacar em reais:\n");
@@ -290,7 +292,7 @@ void sacar(Usuario lista_usuarios[], int index_usuario, int num_usuarios){
         lista_usuarios[index_usuario].reais -= valor;
         printf("\nSaque realizado com sucesso!\n");
         salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-        salvar_extrato(&lista_usuarios[index_usuario], "-", valor, "Reais", 0.0, 0.0);  // Registra a transação
+        salvar_extrato(&lista_usuarios[index_usuario], "-", valor, "Reais", 0.0, 0.0, num_cripto, lista_cripto);  // Registra a transação
       }
       else {
         printf("\nSenha incorreta\n");
@@ -329,20 +331,18 @@ void salvar_cotacao(Cotacao cotacao){
 
 
 // Função Comprar Criptomoedas
-void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao) {
+void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao, int num_cripto, Cripto lista_cripto[]) {
   int opcao, senha, opcao_confirmacao;
-  double valor, valor_taxado, valor_cripto, taxa;
-  const char *nomes[] = {"Bitcoin", "Ethereum", "Ripple"};
-  double *cotas[] = {&cotacao.bitcoin, &cotacao.ethereum, &cotacao.ripple};
+  double valor, valor_taxado, valor_cripto;
 
   printf("\nEscolha a criptomoeda que deseja comprar:\n");
-  for (int i = 0; i < 3; i++) {
-    printf("%d. %s\n", i + 1, nomes[i]);
+  for (int i = 0; i < num_cripto; i++) {
+    printf("%d. %s\n", i + 1, lista_cripto[i].nome);
   }
   scanf("%d", &opcao);
   opcao--; // Ajuste para índice de array
 
-  if (opcao < 0 || opcao >= 3) {
+  if (opcao < 0 || opcao >= num_cripto) {
     printf("Opção inválida\n");
     return;
   }
@@ -355,9 +355,7 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
     return;
   }
 
-  if (opcao == 0) {taxa = 1.02;}
-  else {taxa = 1.01;}
-  valor_taxado = valor * taxa;
+  valor_taxado  = valor * (1 + lista_cripto[opcao].taxa_compra);
 
   if (valor_taxado > lista_usuarios[index_usuario].reais) {
     printf("\nSaldo insuficiente\n");
@@ -375,25 +373,19 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
     return;
   }
 
-  valor_cripto = valor / (*cotas[opcao]);
+  valor_cripto = valor / lista_cripto[opcao].cotacao;
   printf("\nResumo da compra:\n");
   printf("Valor em Reais com taxas: R$ %.2lf\n", valor_taxado);
-  printf("Valor em %s: %.8lf\n", nomes[opcao], valor_cripto);
+  printf("Valor em %s: %.8lf\n", lista_cripto[opcao].nome, valor_cripto);
   printf("\n1. Confirmar Compra\n2. Cancelar Compra\n");
   scanf("%d", &opcao_confirmacao);
 
   if (opcao_confirmacao == 1) {
-    if (opcao == 0) {  // Se a opção for Bitcoin
-      lista_usuarios[index_usuario].bitcoin += valor_cripto;
-    } else if (opcao == 1) {  // Se a opção for Ethereum
-      lista_usuarios[index_usuario].ethereum += valor_cripto;
-    } else if (opcao == 2) {  // Se a opção for Ripple
-      lista_usuarios[index_usuario].ripple += valor_cripto;
-    }
+    lista_usuarios[index_usuario].cripto[opcao] += valor_cripto;
     lista_usuarios[index_usuario].reais -= valor_taxado;
     printf("\nCompra realizada com sucesso!\n");
     salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-    salvar_extrato(&lista_usuarios[index_usuario], "+", valor_cripto, nomes[opcao], taxa, (*cotas[opcao]));  // Registra a transação
+    salvar_extrato(&lista_usuarios[index_usuario], "+", valor_cripto, lista_cripto[opcao].nome, lista_cripto[opcao].taxa_compra, lista_cripto[opcao].cotacao, num_cripto, lista_cripto);  // Registra a transação
   } else if (opcao == 2) {
     printf("\nCompra cancelada\n");
   } else {
@@ -403,15 +395,13 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
 
 
 // Função Vender Criptomoedas
-void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao) {
+void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_usuarios, Cotacao cotacao, int num_cripto, Cripto lista_cripto[]) {
   int opcao, senha, opcao_confirmacao;
-  double valor_cripto, valor_cripto_taxado, valor_reais, taxa;
-  const char *nomes[] = {"Bitcoin", "Ethereum", "Ripple"};
-  double *cotas[] = {&cotacao.bitcoin, &cotacao.ethereum, &cotacao.ripple};
+  double valor_cripto, valor_cripto_taxado, valor_reais;
 
   printf("\nEscolha a criptomoeda que deseja vender:\n");
-  for (int i = 0; i < 3; i++) {
-    printf("%d. %s\n", i + 1, nomes[i]);
+  for (int i = 0; i < num_cripto; i++) {
+    printf("%d. %s\n", i + 1, lista_cripto[i].nome);
   }
   scanf("%d", &opcao);
   opcao--; // Ajuste para índice de array
@@ -421,7 +411,7 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     return;
   }
 
-  printf("Insira o valor que você deseja vender em %s (Sem incluir taxas):\n", nomes[opcao]);
+  printf("Insira o valor que você deseja vender em %s (Sem incluir taxas):\n", lista_cripto[opcao].nome);
   scanf("%lf", &valor_cripto);
 
   if (valor_cripto <= 0) {
@@ -429,29 +419,10 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     return;
   }
 
-  if (opcao == 0) {
-    taxa = 1.03;
-    valor_cripto_taxado = valor_cripto * taxa;
-    if (valor_cripto_taxado > lista_usuarios[index_usuario].bitcoin) {
-      printf("\nSaldo insuficiente\n");
-      return;
-    }
-  }
-  else if (opcao == 1) {
-    taxa = 1.02;
-    valor_cripto_taxado = valor_cripto * taxa;
-    if (valor_cripto_taxado > lista_usuarios[index_usuario].ethereum) {
-      printf("\nSaldo insuficiente\n");
-      return;
-    }
-  }
-  else if (opcao == 2) {
-    taxa = 1.01;
-    valor_cripto_taxado = valor_cripto * taxa;
-    if (valor_cripto_taxado > lista_usuarios[index_usuario].ripple) {
-      printf("\nSaldo insuficiente\n");
-      return;
-    }
+  valor_cripto_taxado = valor_cripto * (1 + lista_cripto[opcao].taxa_venda);
+  if (valor_cripto_taxado > lista_usuarios[index_usuario].cripto[opcao]) {
+    printf("\nSaldo insuficiente\n");
+    return;
   }
 
   printf("Insira sua senha para confirmação:\n");;
@@ -465,25 +436,19 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     return;
   }
 
-  valor_reais = valor_cripto * (*cotas[opcao]);
+  valor_reais = valor_cripto * lista_cripto[opcao].cotacao;
   printf("\nResumo da venda:\n");
-  printf("Valor em %s com taxas: %.8lf\n", nomes[opcao], valor_cripto_taxado);
+  printf("Valor em %s com taxas: %.8lf\n", lista_cripto[opcao].nome, valor_cripto_taxado);
   printf("Valor em Reais: R$ %.2lf\n", valor_reais);
   printf("\n1. Confirmar Venda\n2. Cancelar Venda\n");
   scanf("%d", &opcao_confirmacao);
 
   if (opcao_confirmacao == 1) {
-    if (opcao == 0) {  // Se a opção for Bitcoin
-      lista_usuarios[index_usuario].bitcoin -= valor_cripto_taxado;
-    } else if (opcao == 1) {  // Se a opção for Ethereum
-      lista_usuarios[index_usuario].ethereum -= valor_cripto_taxado;
-    } else if (opcao == 2) {  // Se a opção for Ripple
-      lista_usuarios[index_usuario].ripple -= valor_cripto_taxado;
-    }
+    lista_usuarios[index_usuario].cripto[opcao] -= valor_cripto;
     lista_usuarios[index_usuario].reais += valor_reais;
     printf("\nVenda realizada com sucesso!\n");
     salvar_usuarios(lista_usuarios, num_usuarios);  // Salva as alterações do saldo no arquivo
-    salvar_extrato(&lista_usuarios[index_usuario], "-", valor_cripto_taxado, nomes[opcao], taxa, (*cotas[opcao]));  // Registra a transação
+    salvar_extrato(&lista_usuarios[index_usuario], "-", valor_cripto_taxado, lista_cripto[opcao].nome, lista_cripto[opcao].taxa_venda, lista_cripto[opcao].cotacao, num_cripto, lista_cripto);  // Registra a transação
   } else if (opcao == 2) {
     printf("\nVenda cancelada\n");
   } else {
@@ -511,7 +476,7 @@ void atualizar_cotacao(Cotacao *cotacao) {
 
 
 // Função para salvar extrato de transações
-void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moeda[], double taxa, double cotacao) {
+void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moeda[], double taxa, double cotacao, int num_criptos, Cripto lista_cripto[]) {
   FILE *file;
   char filename[30];
   snprintf(filename, sizeof(filename), "extrato_%lld.txt", usuario->cpf); // Nome do arquivo baseado no CPF
@@ -529,10 +494,12 @@ void salvar_extrato(Usuario *usuario, char sinal[], double valor, const char moe
   strftime(timestamp, sizeof(timestamp), "%d-%m-%Y %H:%M:%S", tm_info);
 
   // Escreve a transação no arquivo
-  fprintf(file, "%s %s %.4lf %s CT: %.2f TX: %.2f REAL: %.2f BTC: %.6f ETH: %.6f XRP: %.6f\n", 
-  timestamp, sinal, valor, moeda, cotacao, taxa, usuario->reais, 
-  usuario->bitcoin, usuario->ethereum, usuario->ripple);
-
+  fprintf(file, "%s %s %.4lf %s CT: %.2f TX: %.2f REAL: %.2f ", 
+    timestamp, sinal, valor, moeda, cotacao, taxa, usuario->reais);
+  for (int i = 0; i < num_criptos; i++) {     
+    fprintf(file, "%s: %.2lf ", lista_cripto[i].nome, usuario->cripto[i]);   
+  }
+  fprintf(file, "\n");
   fclose(file);
 }
 
@@ -568,6 +535,9 @@ void adm() {
   int num_usuarios = carregar_usuarios(lista_usuarios);
   Cotacao cotacao;
   carregar_cotacao(&cotacao);
+  int num_cripto;
+  Cripto lista_cripto[MAX_CRIPTO];
+  carregar_cripto(lista_cripto, &num_cripto);
   
   carregar_adm(&dados_adm);
   login_adm(dados_adm);
@@ -587,20 +557,20 @@ void adm() {
 
     switch (opcao) {
       case 1: // Função Cadastrar novo investidor
-        cadastro(lista_usuarios, &num_usuarios);
+        cadastro(lista_usuarios, &num_usuarios, num_cripto);
         printf("Usuário %s cadastrado como investidor\n", lista_usuarios[num_usuarios - 1].nome);
         continue;
       case 2: // Função Excluir investidor
         excluir_investidor(lista_usuarios, &num_usuarios);
         continue;
       case 3: // Função Cadastrar criptomoeda
-
+        adicionar_cripto(lista_cripto, &num_cripto, lista_usuarios, num_usuarios);
         continue;
       case 4: // Função Excluir criptomoeda
-
+        excluir_cripto(lista_cripto, &num_cripto);
         continue;
       case 5: // Função Consultar saldo de investidor
-        saldo_investidor(lista_usuarios, &num_usuarios);
+        saldo_investidor(lista_usuarios, &num_usuarios, num_cripto, lista_cripto);
         continue;
       case 6: // Consultar extrato de investidor
         extrato_investidor(lista_usuarios, &num_usuarios);
@@ -635,7 +605,6 @@ void carregar_adm(Admin *dados_adm) {
 void login_adm(Admin dados_adm) {
   long long cpf;
   int senha;
-  
 
   while (1) {
     printf("\nLOGIN DE ADMINISTRADOR\n");
@@ -727,7 +696,7 @@ void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios) {
 
 
 // Função Consultar saldo de investidor
-void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios){
+void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios, int num_cripto, Cripto lista_cripto[]){
 long long cpf;
   int index, opcao;
   char lixo;
@@ -763,9 +732,9 @@ long long cpf;
       printf("Nome: %s\nCPF: %lld\nSenha: %d\n", lista_usuarios[index].nome, lista_usuarios[index].cpf, lista_usuarios[index].senha);
       printf("\nSaldo do usuário:\n\n");
       printf("Reais: %.2lf\n", lista_usuarios[index].reais);
-      printf("Bitcoin: %.8lf\n", lista_usuarios[index].bitcoin);
-      printf("Ethereum: %.8lf\n", lista_usuarios[index].ethereum);
-      printf("Ripple: %.8lf\n", lista_usuarios[index].ripple);
+      for (int i = 0; i < num_cripto; i++) {
+        printf("%s: %.2lf\n", lista_cripto[i].nome, lista_usuarios[index].cripto[i]);
+      }
       printf("\nDeseja consultar o saldo de outro investidor? (1 - Sim, 2 - Não)\n");
       scanf("%d", &opcao);
       scanf("%c", &lixo);
@@ -828,4 +797,98 @@ long long cpf;
       }
     }
   }
+}
+
+
+// Adicionar Criptomoedas
+void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario *lista_usuario[], int num_usuarios) {
+    Cripto nova_cripto;
+
+    printf("Digite o nome da criptomoeda: ");
+    scanf("%s", nova_cripto.nome);
+
+    printf("Digite a cotação da criptomoeda: ");
+    scanf("%lf", &nova_cripto.cotacao);
+
+    printf("Digite a taxa de compra: ");
+    scanf("%lf", &nova_cripto.taxa_compra);
+
+    printf("Digite a taxa de venda: ");
+    scanf("%lf", &nova_cripto.taxa_venda);
+
+    lista_cripto[*num_cripto] = nova_cripto;
+    (*num_cripto)++;
+
+    salvar_cripto(lista_cripto, *num_cripto);  // Salva as criptos no arquivo binário
+    printf("Criptomoeda %s adicionada com sucesso!\n", nova_cripto.nome);
+}
+
+
+// Excluir Criptomoedas
+void excluir_cripto(Cripto lista_cripto[], int *num_cripto) {
+    char nome[50];
+    int index = -1;
+
+    printf("Digite o nome da criptomoeda que deseja excluir: ");
+    scanf("%s", nome);
+
+    for (int i = 0; i < *num_cripto; i++) {
+        if (strcmp(lista_cripto[i].nome, nome) == 0) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        printf("Criptomoeda não encontrada!\n");
+        return;
+    }
+
+    // Remove a criptomoeda da lista
+    for (int i = index; i < *num_cripto - 1; i++) {
+        lista_cripto[i] = lista_cripto[i + 1];
+    }
+    (*num_cripto)--;
+
+    salvar_cripto(lista_cripto, *num_cripto);  // Salva novamente a lista de criptos no arquivo
+    printf("Criptomoeda %s excluída com sucesso!\n", nome);
+}
+
+
+// Salvar Criptomoedas
+void salvar_cripto(Cripto lista_cripto[], int num_cripto) {
+    FILE *file = fopen("criptos.bin", "wb");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo para salvar as criptomoedas");
+        return;
+    }
+
+    fwrite(&num_cripto, sizeof(int), 1, file);  // Salva a quantidade de criptos
+    fwrite(lista_cripto, sizeof(Cripto), num_cripto, file);  // Salva a lista de criptos
+
+    fclose(file);
+}
+
+// Carregar Criptomoedas
+void carregar_cripto(Cripto lista_cripto[], int *num_cripto) {
+    FILE *file = fopen("criptos.bin", "rb");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo para carregar as criptomoedas");
+        return;
+    }
+
+    fread(num_cripto, sizeof(int), 1, file);  // Carrega a quantidade de criptos
+    fread(lista_cripto, sizeof(Cripto), *num_cripto, file);  // Carrega a lista de criptos
+
+    fclose(file);
+}
+
+
+// Salvar alterações de criptos no saldo dos investidores
+void salvar_saldo_cripto(Cripto lista_cripot[], int num_cripto, Usuario *lista_usuarios[], int num_usuarios) {
+  for (int i = 0; i < num_usuarios; i++) {
+    lista_usuarios[i]->cripto[num_cripto - 1] = 0;
+  }
+  salvar_usuarios(*lista_usuarios, num_usuarios);
+  
 }
