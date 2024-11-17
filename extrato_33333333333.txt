@@ -1,3 +1,4 @@
-16-11-2024 23:59:02 + 800.0000 Reais CT: 0.00 TX: 0.00 REAL: 800.00 Bitcoin: 0.00 Ethereum: 0.00 Joao: 0.00 
-16-11-2024 23:59:11 + 50000.0000 Reais CT: 0.00 TX: 0.00 REAL: 50800.00 Bitcoin: 0.00 Ethereum: 0.00 Joao: 0.00 
-16-11-2024 23:59:32 + 0.0100 Bitcoin CT: 300000.00 TX: 3.00 REAL: 38800.00 Bitcoin: 0.01 Ethereum: 0.00 Joao: 0.00 
+17-11-2024 22:20:19 + 50000.0000 Reais CT: 0.00 TX: 0.00 REAL: 50000.00 Ripple: 0.00 Ethereum: 0.00 
+17-11-2024 22:21:18 + 1.2500 Ripple CT: 400.00 TX: 3.00 REAL: 49485.00 Ripple: 1.25 Ethereum: 0.00 Bitcoin: 0.00 
+17-11-2024 22:21:34 + 0.5714 Bitcoin CT: 35000.00 TX: 3.00 REAL: 28885.00 Ripple: 1.25 Ethereum: 0.00 Bitcoin: 0.57 
+17-11-2024 22:21:47 + 5.0000 Ethereum CT: 3000.00 TX: 2.00 REAL: 13585.00 Ripple: 1.25 Ethereum: 5.00 Bitcoin: 0.57 

@@ -69,10 +69,9 @@ void login_adm();
 void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios);
 void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios, int num_cripto, Cripto lista_cripto[]);
 void extrato_investidor(Usuario lista_usuarios[], int *num_usuarios);
-void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario *lista_usuarios[], int num_usuarios);
-void excluir_cripto(Cripto lista_cripto[], int *num_cripto);
+void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usuarios[], int num_usuarios);
+void excluir_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usuarios[], int num_usuarios);
 void salvar_cripto(Cripto lista_cripto[], int num_cripto);
 void carregar_cripto(Cripto lista_cripto[], int *num_cripto);
-void salvar_saldo_cripto(Cripto lista_cripot[], int num_cripto, Usuario *lista_usuarios[], int num_usuarios);
 
 #endif

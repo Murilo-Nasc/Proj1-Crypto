@@ -355,7 +355,7 @@ void comprar_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_u
     return;
   }
 
-  valor_taxado  = valor * (1 + lista_cripto[opcao].taxa_compra);
+  valor_taxado  = valor * (1 + 0.01 * lista_cripto[opcao].taxa_compra);
 
   if (valor_taxado > lista_usuarios[index_usuario].reais) {
     printf("\nSaldo insuficiente\n");
@@ -419,7 +419,7 @@ void vender_criptomoedas(Usuario lista_usuarios[], int index_usuario, int num_us
     return;
   }
 
-  valor_cripto_taxado = valor_cripto * (1 + lista_cripto[opcao].taxa_venda);
+  valor_cripto_taxado = valor_cripto * (1 + 0.01 * lista_cripto[opcao].taxa_venda);
   if (valor_cripto_taxado > lista_usuarios[index_usuario].cripto[opcao]) {
     printf("\nSaldo insuficiente\n");
     return;
@@ -567,7 +567,7 @@ void adm() {
         adicionar_cripto(lista_cripto, &num_cripto, lista_usuarios, num_usuarios);
         continue;
       case 4: // Função Excluir criptomoeda
-        excluir_cripto(lista_cripto, &num_cripto);
+        excluir_cripto(lista_cripto, &num_cripto, lista_usuarios, num_usuarios);
         continue;
       case 5: // Função Consultar saldo de investidor
         saldo_investidor(lista_usuarios, &num_usuarios, num_cripto, lista_cripto);
@@ -801,94 +801,111 @@ long long cpf;
 
 
 // Adicionar Criptomoedas
-void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario *lista_usuario[], int num_usuarios) {
+void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usuarios[], int num_usuarios) {
     Cripto nova_cripto;
 
-    printf("Digite o nome da criptomoeda: ");
-    scanf("%s", nova_cripto.nome);
+  printf("Digite o nome da criptomoeda: ");
+  scanf("%s", nova_cripto.nome);
 
-    printf("Digite a cotação da criptomoeda: ");
-    scanf("%lf", &nova_cripto.cotacao);
+  printf("Digite a cotação da criptomoeda: ");
+  scanf("%lf", &nova_cripto.cotacao);
 
-    printf("Digite a taxa de compra: ");
-    scanf("%lf", &nova_cripto.taxa_compra);
+  printf("Digite a taxa de compra: ");
+  scanf("%lf", &nova_cripto.taxa_compra);
 
-    printf("Digite a taxa de venda: ");
-    scanf("%lf", &nova_cripto.taxa_venda);
+  printf("Digite a taxa de venda: ");
+  scanf("%lf", &nova_cripto.taxa_venda);
 
-    lista_cripto[*num_cripto] = nova_cripto;
-    (*num_cripto)++;
-
-    salvar_cripto(lista_cripto, *num_cripto);  // Salva as criptos no arquivo binário
-    printf("Criptomoeda %s adicionada com sucesso!\n", nova_cripto.nome);
+  lista_cripto[*num_cripto] = nova_cripto;
+  (*num_cripto)++;
+  
+  salvar_cripto(lista_cripto, *num_cripto);
+  printf("Criptomoeda %s adicionada com sucesso!\n", nova_cripto.nome);
 }
 
 
 // Excluir Criptomoedas
-void excluir_cripto(Cripto lista_cripto[], int *num_cripto) {
-    char nome[50];
-    int index = -1;
+void excluir_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usuarios[], int num_usuarios) {
+  char nome[50], lixo;
+  int index = -1, opcao;
 
-    printf("Digite o nome da criptomoeda que deseja excluir: ");
-    scanf("%s", nome);
+  printf("Digite o nome da criptomoeda que deseja excluir: ");
+  scanf("%s", nome);
 
-    for (int i = 0; i < *num_cripto; i++) {
-        if (strcmp(lista_cripto[i].nome, nome) == 0) {
-            index = i;
-            break;
-        }
+  for (int i = 0; i < *num_cripto; i++) {
+    if (strcmp(lista_cripto[i].nome, nome) == 0) {
+      index = i;
+      break;
     }
+  }
 
-    if (index == -1) {
-        printf("Criptomoeda não encontrada!\n");
-        return;
+  if (index == -1) {
+    printf("Criptomoeda não encontrada!\n");
+    return;
+  }
+
+  printf("Dados da Criptomoeda:\n");
+  printf("Nome: %s\n", lista_cripto[index].nome);
+  printf("Cotação: %.2lf\n", lista_cripto[index].cotacao);
+  printf("Taxa de Compra : 0.0%.0lf\n", lista_cripto[index].taxa_compra);
+  printf("Taxa de Venda : 0.0%.0lf\n", lista_cripto[index].taxa_venda);
+  while (1) {
+    printf("Deseja excluir esta criptomoeda? (1 - Sim, 2 - Não)\n");
+    scanf("%d", &opcao);
+    scanf("%c", &lixo);
+    if (opcao == 1) {
+      break;
+    } else if (opcao == 2) {
+      printf("Operação cancelada!\n");
+      return;
+    } else {
+      printf("Opção inválida!\n");
     }
+  }
+  // Remove a criptomoeda da lista
+  for (int i = index; i < *num_cripto - 1; i++) {
+    lista_cripto[i] = lista_cripto[i + 1];
+  }
+  (*num_cripto)--;
 
-    // Remove a criptomoeda da lista
-    for (int i = index; i < *num_cripto - 1; i++) {
-        lista_cripto[i] = lista_cripto[i + 1];
+  // Arruma o saldo dos investidores
+  for (int i = 0; i < num_usuarios; i++) {
+    for (int j = index; j < *num_cripto; j++) {
+      lista_usuarios[i].cripto[j] = lista_usuarios[i].cripto[j + 1];
     }
-    (*num_cripto)--;
+    lista_usuarios[i].cripto[*num_cripto] = 0;
+  }
 
-    salvar_cripto(lista_cripto, *num_cripto);  // Salva novamente a lista de criptos no arquivo
-    printf("Criptomoeda %s excluída com sucesso!\n", nome);
+  salvar_cripto(lista_cripto, *num_cripto);
+  salvar_usuarios(lista_usuarios, num_usuarios);
+  printf("Criptomoeda %s excluída com sucesso!\n", nome);
 }
 
 
 // Salvar Criptomoedas
 void salvar_cripto(Cripto lista_cripto[], int num_cripto) {
-    FILE *file = fopen("criptos.bin", "wb");
-    if (file == NULL) {
-        perror("Erro ao abrir o arquivo para salvar as criptomoedas");
-        return;
-    }
+  FILE *file = fopen("criptos.bin", "wb");
+  if (file == NULL) {
+    perror("Erro ao abrir o arquivo para salvar as criptomoedas");
+    return;
+  }
 
-    fwrite(&num_cripto, sizeof(int), 1, file);  // Salva a quantidade de criptos
-    fwrite(lista_cripto, sizeof(Cripto), num_cripto, file);  // Salva a lista de criptos
+  fwrite(&num_cripto, sizeof(int), 1, file);  
+  fwrite(lista_cripto, sizeof(Cripto), num_cripto, file);  
 
-    fclose(file);
+  fclose(file);
 }
 
 // Carregar Criptomoedas
 void carregar_cripto(Cripto lista_cripto[], int *num_cripto) {
-    FILE *file = fopen("criptos.bin", "rb");
-    if (file == NULL) {
-        perror("Erro ao abrir o arquivo para carregar as criptomoedas");
-        return;
-    }
-
-    fread(num_cripto, sizeof(int), 1, file);  // Carrega a quantidade de criptos
-    fread(lista_cripto, sizeof(Cripto), *num_cripto, file);  // Carrega a lista de criptos
-
-    fclose(file);
-}
-
-
-// Salvar alterações de criptos no saldo dos investidores
-void salvar_saldo_cripto(Cripto lista_cripot[], int num_cripto, Usuario *lista_usuarios[], int num_usuarios) {
-  for (int i = 0; i < num_usuarios; i++) {
-    lista_usuarios[i]->cripto[num_cripto - 1] = 0;
+  FILE *file = fopen("criptos.bin", "rb");
+  if (file == NULL) {
+    perror("Erro ao abrir o arquivo para carregar as criptomoedas");
+    return;
   }
-  salvar_usuarios(*lista_usuarios, num_usuarios);
-  
+
+  fread(num_cripto, sizeof(int), 1, file); 
+  fread(lista_cripto, sizeof(Cripto), *num_cripto, file);  
+
+  fclose(file);
 }
