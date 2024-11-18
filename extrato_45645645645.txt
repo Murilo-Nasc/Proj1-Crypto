@@ -1,0 +1,4 @@
+18-11-2024 12:23:40 + 45000.0000 Reais CT: 0.00 TX: 0.00 REAL: 45000.00 Ripple: 0.00 Bitcoin: 0.00 Ethereum: 0.00 Doge: 0.00 
+18-11-2024 12:23:58 + 0.0007 Doge CT: 3060371.30 TX: 10.00 REAL: 42800.00 Ripple: 0.00 Bitcoin: 0.00 Ethereum: 0.00 Doge: 0.00 
+18-11-2024 12:25:13 + 0.0952 Bitcoin CT: 315141.33 TX: 6.00 REAL: 11000.00 Ripple: 0.00 Bitcoin: 0.10 Ethereum: 0.00 Doge: 0.00 
+18-11-2024 12:25:49 - 0.0840 Bitcoin CT: 330330.25 TX: 5.00 REAL: 37426.42 Ripple: 0.00 Bitcoin: 0.02 Ethereum: 0.00 Doge: 0.00 

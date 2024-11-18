@@ -258,7 +258,7 @@ void mostrar_saldo(Usuario lista_usuarios[], int index_usuario, int num_cripto,
   printf("\nSeu saldo:\n");
   printf("Reais: R$ %.2lf\n", lista_usuarios[index_usuario].reais);
   for (int i = 0, j = 0; i < num_cripto; i++) {
-    printf("%s: %.2lf\n", lista_cripto[i].nome,
+    printf("%s: %.6lf\n", lista_cripto[i].nome,
            lista_usuarios[index_usuario].cripto[i]);
   }
 }
@@ -527,7 +527,7 @@ void carregar_extrato(Usuario *usuario, int index_usuario) {
 
   file = fopen(filename, "r");
   if (file == NULL) {
-    perror("Erro ao abrir o arquivo para carregar o extrato");
+    printf("Extrato vazio: Não foram feitas operações.\n");
     return;
   }
 
@@ -697,6 +697,7 @@ void excluir_investidor(Usuario lista_usuarios[], int *num_usuarios) {
       scanf("%d", &opcao);
       scanf("%c", &lixo);
       if (opcao) {
+        excluir_extrato(cpf);
         for (int i = index; i < *num_usuarios - 1; i++) {
           lista_usuarios[i] = lista_usuarios[i + 1];
         }
@@ -751,17 +752,20 @@ void saldo_investidor(Usuario lista_usuarios[], int *num_usuarios,
       printf("\nSaldo do usuário:\n\n");
       printf("Reais: %.2lf\n", lista_usuarios[index].reais);
       for (int i = 0; i < num_cripto; i++) {
-        printf("%s: %.2lf\n", lista_cripto[i].nome,
+        printf("%s: %.6lf\n", lista_cripto[i].nome,
                lista_usuarios[index].cripto[i]);
       }
-      printf("\nDeseja consultar o saldo de outro investidor? (1 - Sim, 2 - "
-             "Não)\n");
-      scanf("%d", &opcao);
-      scanf("%c", &lixo);
-      if (opcao == 1) {
-        continue;
-      } else {
-        break;
+      while (1) {
+        printf("\nDeseja consultar o saldo de outro investidor? (1 - Sim, 2 - Não)\n");
+        scanf("%d", &opcao);
+        scanf("%c", &lixo);
+        if (opcao == 1) {
+          break;
+        } else if (opcao == 2) {
+          return;
+        } else {
+          printf("Opção inválida\n");
+        }
       }
     }
   }
@@ -807,15 +811,19 @@ void extrato_investidor(Usuario lista_usuarios[], int *num_usuarios) {
              lista_usuarios[index].cpf, lista_usuarios[index].senha);
       printf("\nExtrato do usuário:\n\n");
       carregar_extrato(lista_usuarios, index);
-      printf("\nDeseja consultar o extrato de outro investidor? (1 - Sim, 2 - "
-             "Não)\n");
-      scanf("%d", &opcao);
-      scanf("%c", &lixo);
-      if (opcao == 1) {
-        continue;
-      } else {
-        break;
+      while (1) {
+        printf("\nDeseja consultar o extrato de outro investidor? (1 - Sim, 2 - Não)\n");
+        scanf("%d", &opcao);
+        scanf("%c", &lixo);
+        if (opcao == 1) {
+          break;
+        } else if (opcao == 2) {
+          return;
+        } else {
+          printf("Opção inválida\n");
+        }
       }
+      
     }
   }
 }
@@ -922,4 +930,18 @@ void carregar_cripto(Cripto lista_cripto[], int *num_cripto) {
   fread(lista_cripto, sizeof(Cripto), *num_cripto, file);
 
   fclose(file);
+}
+
+
+// Excluir Extrato do Investidor
+void excluir_extrato(long long cpf) {
+    char nome_arquivo[50];
+
+    snprintf(nome_arquivo, sizeof(nome_arquivo), "extrato_%lld.txt", cpf);
+
+    if (remove(nome_arquivo) == 0) {
+        printf("Extrato do investidor excluído com sucesso.\n");
+    } else {
+        perror("Erro ao excluir extrato");
+    }
 }

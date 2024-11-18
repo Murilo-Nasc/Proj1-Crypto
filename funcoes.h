@@ -65,5 +65,6 @@ void adicionar_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usua
 void excluir_cripto(Cripto lista_cripto[], int *num_cripto, Usuario lista_usuarios[], int num_usuarios);
 void salvar_cripto(Cripto lista_cripto[], int num_cripto);
 void carregar_cripto(Cripto lista_cripto[], int *num_cripto);
+void excluir_extrato(long long cpf);
 
 #endif
