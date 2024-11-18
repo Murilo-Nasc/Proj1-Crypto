@@ -848,28 +848,22 @@ void adicionar_cripto(Cripto lista_cripto[], int *num_cripto,
 void excluir_cripto(Cripto lista_cripto[], int *num_cripto,
                     Usuario lista_usuarios[], int num_usuarios) {
   char nome[50], lixo;
-  int index = -1, opcao;
+  int index, opcao, opcao_cripto;
 
-  printf("Digite o nome da criptomoeda que deseja excluir: ");
-  scanf("%s", nome);
-
+  printf("Criptomoedas:\n");
   for (int i = 0; i < *num_cripto; i++) {
-    if (strcmp(lista_cripto[i].nome, nome) == 0) {
-      index = i;
-      break;
-    }
+    printf("%d - %s\n", i + 1, lista_cripto[i].nome);
   }
+  printf("Escolha a criptomoeda que deseja excluir:\n");
+  scanf("%d", &opcao_cripto);
+  scanf("%c", &lixo);
+  index = opcao_cripto - 1;
 
-  if (index == -1) {
-    printf("Criptomoeda não encontrada!\n");
-    return;
-  }
-
-  printf("Dados da Criptomoeda:\n");
+  printf("\nDados da Criptomoeda:\n");
   printf("Nome: %s\n", lista_cripto[index].nome);
   printf("Cotação: %.2lf\n", lista_cripto[index].cotacao);
-  printf("Taxa de Compra : 0.0%.0lf\n", lista_cripto[index].taxa_compra);
-  printf("Taxa de Venda : 0.0%.0lf\n", lista_cripto[index].taxa_venda);
+  printf("Taxa de Compra : %.2lf\n", 0.01 * lista_cripto[index].taxa_compra);
+  printf("Taxa de Venda : %.2lf\n", 0.01 * lista_cripto[index].taxa_venda);
   while (1) {
     printf("Deseja excluir esta criptomoeda? (1 - Sim, 2 - Não)\n");
     scanf("%d", &opcao);
